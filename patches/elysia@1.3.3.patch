@@ -1,0 +1,34 @@
+diff --git a/dist/context.d.ts b/dist/context.d.ts
+index 01f1e0edc582b41066aad7094900ef3aec03bf02..f9531e8f76ae65b04563661ef441fc0880c7c11c 100644
+--- a/dist/context.d.ts
++++ b/dist/context.d.ts
+@@ -53,6 +53,7 @@ export type ErrorContext<in out Route extends RouteSchema = {}, in out Singleton
+     response: Route['response'];
+ } & Singleton['decorator'] & Singleton['derive'] & Singleton['resolve']>;
+ type PrettifyIfObject<T> = T extends object ? Prettify<T> : T;
++export type StatusFunc = {} extends Route['response'] ? typeof status : <const Code extends keyof Route['response'] | InvertedStatusMap[Extract<InvertedStatusMapKey, keyof Route['response']>], const T extends Code extends keyof Route['response'] ? Route['response'][Code] : Code extends keyof StatusMap ? Route['response'][StatusMap[Code]] : never>(code: Code, response: T) => ElysiaCustomStatusResponse<Code, T>;
+ export type Context<in out Route extends RouteSchema = {}, in out Singleton extends SingletonBase = {
+     decorator: {};
+     store: {};
+@@ -106,7 +107,7 @@ export type Context<in out Route extends RouteSchema = {}, in out Singleton exte
+     route: string;
+     request: Request;
+     store: Singleton['store'];
+-    status: {} extends Route['response'] ? typeof status : <const Code extends keyof Route['response'] | InvertedStatusMap[Extract<InvertedStatusMapKey, keyof Route['response']>], const T extends Code extends keyof Route['response'] ? Route['response'][Code] : Code extends keyof StatusMap ? Route['response'][StatusMap[Code]] : never>(code: Code, response: T) => ElysiaCustomStatusResponse<Code, T>;
++    status: StatusFunc;
+     /**
+     * @deprecated use `status` instead
+     */
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 8949c218db59a488cbd15cdcd673d11af8b5db2a..ea4505536efff7f90fcff7ded2aa3009c21edcba 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -1811,7 +1811,7 @@ export default class Elysia<const in out BasePath extends string = '', const in
+ export { Elysia };
+ export { t } from './type-system';
+ export { serializeCookie, Cookie, type CookieOptions } from './cookies';
+-export type { Context, PreContext, ErrorContext } from './context';
++export type { Context, PreContext, ErrorContext, StatusFunc } from './context';
+ export { ELYSIA_TRACE, type TraceEvent, type TraceListener, type TraceHandler, type TraceProcess, type TraceStream } from './trace';
+ export { getSchemaValidator, getResponseSchemaValidator, replaceSchemaType } from './schema';
+ export { mergeHook, mergeObjectArray, redirect, StatusMap, InvertedStatusMap, form, replaceUrlPath, checksum, cloneInference, deduplicateChecksum, ELYSIA_FORM_DATA, ELYSIA_REQUEST_ID } from './utils';
