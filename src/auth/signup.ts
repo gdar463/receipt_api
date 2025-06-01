@@ -21,6 +21,10 @@ export async function signup(
   }
   const id = ids[0].id;
   const jwt = await createSession(id);
-  session.set({ value: jwt, path: "/" });
+  session.set({
+    value: jwt,
+    path: "/",
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+  });
   return status(200);
 }
