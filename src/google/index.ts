@@ -24,11 +24,11 @@ export const googleRouter = new Elysia({ prefix: "/google" })
     };
   })
   .resolve(({ cookie: { session } }) => {
-    return { id: decodeJwt(session.value!).id } as { id: string };
+    return { userId: decodeJwt(session.value!).id } as { userId: string };
   })
   .get(
     "/callback",
-    async ({ query, id, status }) => {
+    async ({ query, userId, status }) => {
       const { tokens } = await authClient.getToken(query.code);
       if (!tokens.access_token) {
         return status(500, { error: "Google Failed" });
@@ -42,7 +42,7 @@ export const googleRouter = new Elysia({ prefix: "/google" })
             expires: new Date(tokens.expiry_date!),
           }),
         })
-        .where(eq(users.id, id));
+        .where(eq(users.id, userId));
       return status(200);
     },
     {

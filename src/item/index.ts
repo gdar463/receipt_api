@@ -4,6 +4,6 @@ import { decodeJwt } from "jose";
 
 export const itemRouter = new Elysia()
   .resolve(({ cookie: { session } }) => {
-    return { id: decodeJwt(session.value!).id } as { id: string };
+    return { userId: decodeJwt(session.value!).id } as { userId: string };
   })
-  .post("/submit", async ({ status, id }) => await submit(status, id));
+  .post("/submit", async ({ status, userId }) => await submit(status, userId));
