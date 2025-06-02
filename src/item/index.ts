@@ -7,11 +7,12 @@ export const itemRouter = new Elysia()
     return { userId: decodeJwt(session.value!).id } as { userId: string };
   })
   .onError(({ code, error, set }) => {
-    if (code === "VALIDATION") {
-      if (error.type === "body") {
-        set.status = 400;
-        return { error: "Invalid Body" };
-      }
+    switch (code) {
+      case "VALIDATION":
+        if (error.type === "body") {
+          set.status = 400;
+          return { error: "Invalid Body" };
+        }
     }
   })
   .post(

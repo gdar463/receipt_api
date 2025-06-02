@@ -1,7 +1,7 @@
 import { google } from "googleapis";
 import { getAuthClient } from "./token";
 import type { GaxiosResponse } from "gaxios";
-import type { Readable } from "stream";
+import { Readable } from "stream";
 
 export type FileInfo = {
   name: string;
@@ -31,7 +31,7 @@ export async function createFile(file: FileInfo, userId: string) {
     },
     media: {
       mimeType: file.mime,
-      body: file.body,
+      body: Readable.from(file.body),
     },
     fields: "id",
   });
