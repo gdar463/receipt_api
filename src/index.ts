@@ -8,6 +8,13 @@ import { authenticate } from "./auth/jwt";
 const port = process.env.PORT || 3000;
 
 const app = new Elysia()
+  .onError(({ code, error, set }) => {
+    switch (code) {
+      case "NOT_FOUND":
+        set.status = 404;
+        return { error: "Not Found" };
+    }
+  })
   .get("/test", async () => await test())
   .use(authRouter)
   // protected section
