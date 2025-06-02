@@ -3,6 +3,7 @@ import { getAuthClient } from "./token";
 import { GaxiosError, type GaxiosResponse } from "gaxios";
 import { Readable } from "stream";
 import { ReceiptNotFoundError } from "@/item/errors";
+import type { StaticItemBody } from "@/item";
 
 export type FileInfo = {
   name: string;
@@ -46,7 +47,7 @@ export async function getFileByID(fileId: string, userId: string) {
     const driveFile = (await drive.files.get({
       fileId: fileId,
       alt: "media",
-    })) as GaxiosResponse<Readable>;
+    })) as GaxiosResponse<StaticItemBody>;
     return driveFile.data;
   } catch (e) {
     if (e instanceof GaxiosError) {
