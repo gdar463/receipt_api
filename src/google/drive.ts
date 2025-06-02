@@ -1,7 +1,8 @@
 import { google } from "googleapis";
 import { getAuthClient } from "./token";
-import type { GaxiosResponse } from "gaxios";
+import { GaxiosError, type GaxiosResponse } from "gaxios";
 import { Readable } from "stream";
+import { ReceiptNotFoundError } from "@/item/errors";
 
 export type FileInfo = {
   name: string;
@@ -41,11 +42,19 @@ export async function createFile(file: FileInfo, userId: string) {
 export async function getFileByID(fileId: string, userId: string) {
   const authClient = await getAuthClient(userId);
   const drive = google.drive({ version: "v3", auth: authClient });
-  const driveFile = (await drive.files.get({
-    fileId: fileId,
-    alt: "media",
-  })) as GaxiosResponse<Readable>;
-  return driveFile.data;
+  try {
+    const driveFile = (await drive.files.get({
+      fileId: fileId,
+      alt: "media",
+    })) as GaxiosResponse<Readable>;
+    return driveFile.data;
+  } catch (e) {
+    if (e instanceof GaxiosError) {
+      if (e.status == 404) {
+        throw new ReceiptNotFoundError();
+      }
+    }
+  }
 }
 
 export async function listFiles(queryInfo: QueryInfo, userId: string) {

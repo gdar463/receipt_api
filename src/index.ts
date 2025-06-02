@@ -5,11 +5,12 @@ import Elysia from "elysia";
 import { googleRouter } from "./google";
 import { authenticate } from "./auth/jwt";
 import { JWENotFoundError } from "./google/errors";
+import { ReceiptNotFoundError } from "./item/errors";
 
 const port = process.env.PORT || 3000;
 
 const app = new Elysia()
-  .error({ JWENotFoundError })
+  .error({ JWENotFoundError, ReceiptNotFoundError })
   .onError(({ code, error, set }) => {
     switch (code) {
       case "NOT_FOUND":
@@ -18,6 +19,9 @@ const app = new Elysia()
       case "JWENotFoundError":
         set.status = 401;
         return { error: "Google not connected to account" };
+      case "ReceiptNotFoundError":
+        set.status = 404;
+        return { error: "Receipt Not Found" };
     }
   })
   .get("/test", async () => await test())
