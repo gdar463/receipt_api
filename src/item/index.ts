@@ -31,4 +31,13 @@ export const itemRouter = new Elysia()
     {
       body: ItemBody,
     },
+  )
+  .get(
+    "/get/:id",
+    async ({ userId, params: { id } }) => await getReceipt(userId, id),
+    {
+      params: t.Object({
+        id: t.String(),
+      }),
+    },
   );
