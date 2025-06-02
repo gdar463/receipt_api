@@ -19,9 +19,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 }));
 
 export const receipts = sqliteTable("receipts", {
-  id: text()
-    .primaryKey()
-    .$defaultFn(() => v4()),
+  id: text().primaryKey(),
   name: text().notNull(),
   driveId: text().notNull(),
   userId: text()
