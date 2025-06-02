@@ -1,5 +1,9 @@
 import { jwtVerify, SignJWT, type JWTVerifyResult } from "jose";
-import { JWSInvalid, JWSSignatureVerificationFailed } from "jose/errors";
+import {
+  JWSInvalid,
+  JWSSignatureVerificationFailed,
+  JWTExpired,
+} from "jose/errors";
 
 const alg = "HS256";
 const key = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -15,7 +19,11 @@ export async function authenticate(jwt: string) {
   try {
     return (await jwtVerify(jwt, key)) as JWTVerifyResult & IdPayload;
   } catch (e) {
-    if (e instanceof JWSSignatureVerificationFailed || JWSInvalid) {
+    if (
+      e instanceof JWSSignatureVerificationFailed ||
+      JWSInvalid ||
+      JWTExpired
+    ) {
       return false;
     }
     throw e;
