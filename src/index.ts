@@ -4,15 +4,20 @@ import { test } from "./test";
 import Elysia from "elysia";
 import { googleRouter } from "./google";
 import { authenticate } from "./auth/jwt";
+import { JWENotFoundError } from "./google/errors";
 
 const port = process.env.PORT || 3000;
 
 const app = new Elysia()
+  .error({ JWENotFoundError })
   .onError(({ code, error, set }) => {
     switch (code) {
       case "NOT_FOUND":
         set.status = 404;
         return { error: "Not Found" };
+      case "JWENotFoundError":
+        set.status = 401;
+        return { error: "Google not connected to account" };
     }
   })
   .get("/test", async () => await test())

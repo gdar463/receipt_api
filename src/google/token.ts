@@ -4,6 +4,7 @@ import { createSecretKey } from "crypto";
 import { eq } from "drizzle-orm";
 import { google } from "googleapis";
 import { compactDecrypt, CompactEncrypt } from "jose";
+import { JWENotFoundError } from "./errors";
 
 export type GoogleInfo = {
   accessToken: string;
@@ -40,6 +41,9 @@ export async function getAuthClient(userId: string) {
     .select({ googleInfo: users.googleInfo })
     .from(users)
     .where(eq(users.id, userId));
+  if (jwe.length == 0 || jwe[0].googleInfo == null) {
+    throw new JWENotFoundError();
+  }
   const tokens = await decryptInfo(jwe[0].googleInfo!);
   authClient.setCredentials({
     access_token: tokens.accessToken,
