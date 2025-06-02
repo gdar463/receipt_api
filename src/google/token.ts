@@ -28,7 +28,12 @@ export async function encryptInfo(info: GoogleInfo) {
 export async function decryptInfo(jwe: string) {
   const { plaintext } = await compactDecrypt(jwe, secretKey);
   const info = new TextDecoder().decode(plaintext);
-  return JSON.parse(info) as GoogleInfo;
+  return JSON.parse(info, (key, value) => {
+    if (key === "expires") {
+      return new Date(value);
+    }
+    return value;
+  }) as GoogleInfo;
 }
 
 export async function getAuthClient(userId: string) {
