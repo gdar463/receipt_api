@@ -23,6 +23,7 @@ const app = new Elysia()
         set.status = 404;
         return { error: "Receipt Not Found" };
     }
+    throw error;
   })
   .get("/test", async () => await test())
   .use(authRouter)
