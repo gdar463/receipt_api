@@ -25,5 +25,5 @@ export async function submit(
     driveId: driveId!,
     userId,
   });
-  return status(200);
+  return status(200, { id });
 }
