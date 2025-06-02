@@ -1,6 +1,16 @@
-import Elysia from "elysia";
-import { ItemBody, submit } from "./submit";
+import Elysia, { t } from "elysia";
+import { submit } from "./submit";
 import { decodeJwt } from "jose";
+import { getReceipt } from "./get";
+import { ScanComponent } from "./components/scan";
+import { CountryComponent } from "./components/country";
+
+export const ItemBody = t.Object({
+  name: t.String(),
+  components: t.Array(t.Union([ScanComponent, CountryComponent])),
+});
+
+export type StaticItemBody = typeof ItemBody.static;
 
 export const itemRouter = new Elysia()
   .resolve(({ cookie: { session } }) => {
