@@ -79,3 +79,9 @@ export async function listFiles(queryInfo: QueryInfo, userId: string) {
   });
   return list.data.files;
 }
+
+export async function deleteFile(fileId: string, userId: string) {
+  const authClient = await getAuthClient(userId);
+  const drive = google.drive({ version: "v3", auth: authClient });
+  await drive.files.delete({ fileId });
+}
