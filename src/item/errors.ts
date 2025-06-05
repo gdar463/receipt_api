@@ -5,9 +5,16 @@ export class ReceiptNotFoundError extends Error {
   }
 }
 
-export class ReceiptAlreadyExistsError extends Error {
+export class NameAlreadyExistsError extends Error {
   constructor() {
     super("Receipt with this name already exists");
-    this.name = "ReceiptAlreadyExistsError";
+    this.name = "NameAlreadyExistsError";
+  }
+}
+
+export class PatchBodyNotFoundError extends Error {
+  constructor() {
+    super("No Patch Body was Found");
+    this.name = "PatchBodyNotFoundError";
   }
 }
