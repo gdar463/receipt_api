@@ -4,6 +4,7 @@ import { decodeJwt } from "jose";
 import { getReceipt } from "./get";
 import { ScanComponent } from "./components/scan";
 import { CountryComponent } from "./components/country";
+import { listReceipts } from "./list";
 
 export const ItemBody = t.Object({
   name: t.String(),
@@ -40,4 +41,5 @@ export const itemRouter = new Elysia()
         id: t.String(),
       }),
     },
-  );
+  )
+  .get("/get", async ({ userId }) => await listReceipts(userId));
