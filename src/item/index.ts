@@ -5,6 +5,7 @@ import { getReceipt } from "./get";
 import { ScanComponent } from "./components/scan";
 import { CountryComponent } from "./components/country";
 import { listReceipts } from "./list";
+import { deleteReceipt } from "./delete";
 
 export const ItemBody = t.Object({
   name: t.String(),
@@ -42,4 +43,14 @@ export const itemRouter = new Elysia()
       }),
     },
   )
-  .get("/get", async ({ userId }) => await listReceipts(userId));
+  .get("/get", async ({ userId }) => await listReceipts(userId))
+  .delete(
+    "/delete/:id",
+    async ({ status, userId, params: { id } }) =>
+      await deleteReceipt(status, userId, id),
+    {
+      params: t.Object({
+        id: t.String(),
+      }),
+    },
+  );
