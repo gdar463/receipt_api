@@ -3,7 +3,7 @@ import { createFile } from "@/google/drive";
 import { v4 } from "uuid";
 import db from "@/db";
 import { receipts } from "@/db/schema";
-import type { StaticItemBody } from ".";
+import type { StaticItemBody } from "./types";
 import { ReceiptAlreadyExistsError } from "./errors";
 import { eq } from "drizzle-orm";
 

@@ -3,7 +3,7 @@ import { getAuthClient } from "./token";
 import { GaxiosError, type GaxiosResponse } from "gaxios";
 import { Readable } from "stream";
 import { ReceiptNotFoundError } from "@/item/errors";
-import type { StaticItemBody } from "@/item";
+import type { StaticItemBody } from "@/item/types";
 
 export type FileInfo = {
   name: string;
