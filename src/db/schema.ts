@@ -20,7 +20,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 
 export const receipts = sqliteTable("receipts", {
   id: text().primaryKey(),
-  name: text().notNull(),
+  name: text().notNull().unique(),
   driveId: text().notNull(),
   userId: text()
     .notNull()
