@@ -20,7 +20,7 @@ index 01f1e0edc582b41066aad7094900ef3aec03bf02..f9531e8f76ae65b04563661ef441fc08
      * @deprecated use `status` instead
      */
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index 8949c218db59a488cbd15cdcd673d11af8b5db2a..ea4505536efff7f90fcff7ded2aa3009c21edcba 100644
+index f09a2734427db9d76910ac810d69696d86b60e2b..ffa33e89400c7cf5b220d8aaa91a3eac01ffc638 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
 @@ -1811,7 +1811,7 @@ export default class Elysia<const in out BasePath extends string = '', const in
@@ -31,4 +31,4 @@ index 8949c218db59a488cbd15cdcd673d11af8b5db2a..ea4505536efff7f90fcff7ded2aa3009
 +export type { Context, PreContext, ErrorContext, StatusFunc } from './context';
  export { ELYSIA_TRACE, type TraceEvent, type TraceListener, type TraceHandler, type TraceProcess, type TraceStream } from './trace';
  export { getSchemaValidator, getResponseSchemaValidator, replaceSchemaType } from './schema';
- export { mergeHook, mergeObjectArray, redirect, StatusMap, InvertedStatusMap, form, replaceUrlPath, checksum, cloneInference, deduplicateChecksum, ELYSIA_FORM_DATA, ELYSIA_REQUEST_ID } from './utils';
+ export { mergeHook, mergeObjectArray, redirect, StatusMap, InvertedStatusMap, form, replaceUrlPath, checksum, cloneInference, deduplicateChecksum, ELYSIA_FORM_DATA, ELYSIA_REQUEST_ID, sse } from './utils';
