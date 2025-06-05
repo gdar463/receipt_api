@@ -4,3 +4,10 @@ export class ReceiptNotFoundError extends Error {
     this.name = "ReceiptNotFoundError";
   }
 }
+
+export class ReceiptAlreadyExistsError extends Error {
+  constructor() {
+    super("Receipt with this name already exists");
+    this.name = "ReceiptAlreadyExistsError";
+  }
+}

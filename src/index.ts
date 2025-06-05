@@ -5,12 +5,12 @@ import Elysia from "elysia";
 import { googleRouter } from "./google";
 import { authenticate } from "./auth/jwt";
 import { JWENotFoundError } from "./google/errors";
-import { ReceiptNotFoundError } from "./item/errors";
+import { ReceiptAlreadyExistsError, ReceiptNotFoundError } from "./item/errors";
 
 const port = process.env.PORT || 3000;
 
 const app = new Elysia()
-  .error({ JWENotFoundError, ReceiptNotFoundError })
+  .error({ JWENotFoundError, ReceiptNotFoundError, ReceiptAlreadyExistsError })
   .onError(({ code, error, set }) => {
     switch (code) {
       case "NOT_FOUND":
@@ -22,6 +22,9 @@ const app = new Elysia()
       case "ReceiptNotFoundError":
         set.status = 404;
         return { error: "Receipt Not Found" };
+      case "ReceiptAlreadyExistsError":
+        set.status = 409;
+        return { error: "Name already exists" };
     }
     throw error;
   })
