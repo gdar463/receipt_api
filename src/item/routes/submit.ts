@@ -3,8 +3,8 @@ import { createFile } from "@/google/drive";
 import { v4 } from "uuid";
 import db from "@/db";
 import { receipts } from "@/db/schema";
-import type { StaticItemBody } from "./types";
-import { NameAlreadyExistsError } from "./errors";
+import type { StaticItemBody } from "@/item/types";
+import { NameAlreadyExistsError } from "@/item/errors";
 import { eq } from "drizzle-orm";
 
 export async function submit(

@@ -1,10 +1,10 @@
 import Elysia, { t } from "elysia";
-import { submit } from "./submit";
+import { submit } from "./routes/submit";
 import { decodeJwt } from "jose";
-import { getReceipt } from "./get";
-import { listReceipts } from "./list";
-import { deleteReceipt } from "./delete";
-import { patchReceipt } from "./patch";
+import { getReceipt } from "./routes/get";
+import { listReceipts } from "./routes/list";
+import { deleteReceipt } from "./routes/delete";
+import { patchReceipt } from "./routes/patch";
 import { ItemBody, PartialItemBody } from "./types";
 
 export const itemRouter = new Elysia()

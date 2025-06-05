@@ -1,7 +1,7 @@
 import db from "@/db";
 import { receipts } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { ReceiptNotFoundError } from "./errors";
+import { ReceiptNotFoundError } from "@/item/errors";
 import { getFileByID } from "@/google/drive";
 
 export async function getReceipt(userId: string, receiptId: string) {

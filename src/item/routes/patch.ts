@@ -1,15 +1,15 @@
 import db from "@/db";
 import { receipts } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import type { StaticPartialItemBody } from "./types";
+import type { StaticPartialItemBody } from "@/item/types";
 import {
   NameAlreadyExistsError,
   PatchBodyNotFoundError,
   ReceiptNotFoundError,
-} from "./errors";
+} from "@/item/errors";
 import { getFileByID, updateFile } from "@/google/drive";
-import type { StaticSingleComponent } from "./components";
-import { deepMerge } from "./util";
+import type { StaticSingleComponent } from "@/item/components";
+import { deepMerge } from "@/item/util";
 
 export async function patchReceipt(
   userId: string,
