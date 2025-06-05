@@ -55,6 +55,7 @@ export async function getFileByID(fileId: string, userId: string) {
         throw new ReceiptNotFoundError();
       }
     }
+    throw e;
   }
 }
 
