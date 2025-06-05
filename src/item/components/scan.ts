@@ -6,5 +6,3 @@ export const ScanComponent = t.Object({
     driveId: t.String(),
   }),
 });
-
-export type StaticScanComponent = typeof ScanComponent.static;

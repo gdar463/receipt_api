@@ -6,5 +6,3 @@ export const CountryComponent = t.Object({
     country: t.String(),
   }),
 });
-
-export type StaticCountryComponent = typeof CountryComponent.static;

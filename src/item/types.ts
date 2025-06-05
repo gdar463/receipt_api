@@ -1,10 +1,9 @@
 import { t } from "elysia";
-import { ScanComponent } from "./components/scan";
-import { CountryComponent } from "./components/country";
+import { Components } from "./components";
 
 export const ItemBody = t.Object({
   name: t.String(),
-  components: t.Array(t.Union([ScanComponent, CountryComponent])),
+  components: Components,
 });
 export const PartialItemBody = t.Partial(ItemBody);
 
