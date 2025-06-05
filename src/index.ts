@@ -5,12 +5,17 @@ import Elysia from "elysia";
 import { googleRouter } from "./google";
 import { authenticate } from "./auth/jwt";
 import { JWENotFoundError } from "./google/errors";
-import { NameAlreadyExistsError, ReceiptNotFoundError } from "./item/errors";
+import {
+  NameAlreadyExistsError,
+  PatchBodyNotFoundError,
+  ReceiptNotFoundError,
+} from "./item/errors";
 
 const port = process.env.PORT || 3000;
 
 const app = new Elysia()
   .error({
+    PatchBodyNotFoundError,
     JWENotFoundError,
     ReceiptNotFoundError,
     NameAlreadyExistsError,
@@ -29,6 +34,9 @@ const app = new Elysia()
       case "NameAlreadyExistsError":
         set.status = 409;
         return { error: "Name already exists" };
+      case "PatchBodyNotFoundError":
+        set.status = 409;
+        return { error: "Missing body" };
     }
     throw error;
   })

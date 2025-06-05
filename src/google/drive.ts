@@ -86,3 +86,15 @@ export async function deleteFile(fileId: string, userId: string) {
   const drive = google.drive({ version: "v3", auth: authClient });
   await drive.files.delete({ fileId });
 }
+
+export async function updateFile(fileId: string, body: any, userId: string) {
+  const authClient = await getAuthClient(userId);
+  const drive = google.drive({ version: "v3", auth: authClient });
+  await drive.files.update({
+    fileId,
+    media: {
+      mimeType: "application/json",
+      body: Readable.from(JSON.stringify(body)),
+    },
+  });
+}

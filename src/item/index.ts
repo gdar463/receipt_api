@@ -2,18 +2,10 @@ import Elysia, { t } from "elysia";
 import { submit } from "./submit";
 import { decodeJwt } from "jose";
 import { getReceipt } from "./get";
-import { ScanComponent } from "./components/scan";
-import { CountryComponent } from "./components/country";
 import { listReceipts } from "./list";
 import { deleteReceipt } from "./delete";
-
-export const ItemBody = t.Object({
-  name: t.String(),
-  components: t.Array(t.Union([ScanComponent, CountryComponent])),
-});
-
-export type StaticItemBody = typeof ItemBody.static;
 import { patchReceipt } from "./patch";
+import { ItemBody, PartialItemBody } from "./types";
 
 export const itemRouter = new Elysia()
   .resolve(({ cookie: { session } }) => {
@@ -53,5 +45,16 @@ export const itemRouter = new Elysia()
       params: t.Object({
         id: t.String(),
       }),
+    },
+  )
+  .patch(
+    "/edit/:id",
+    async ({ userId, params: { id }, body }) =>
+      await patchReceipt(userId, id, body),
+    {
+      params: t.Object({
+        id: t.String(),
+      }),
+      body: PartialItemBody,
     },
   );
