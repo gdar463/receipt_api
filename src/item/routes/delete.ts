@@ -17,5 +17,5 @@ export async function deleteReceipt(
     return status(500);
   }
   await deleteFile(rows[0].driveId, userId);
-  return status(200);
+  return status(204);
 }
