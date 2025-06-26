@@ -3,7 +3,7 @@ import { getAuthClient } from "./token";
 import { GaxiosError, type GaxiosResponse } from "gaxios";
 import { Readable } from "stream";
 import { ReceiptNotFoundError } from "@/item/errors";
-import type { StaticItemBody } from "@/item/types";
+import type { ReceiptDB } from "@/item/types";
 
 export type FileInfo = {
   name: string;
@@ -47,7 +47,7 @@ export async function getFileByID(fileId: string, userId: string) {
     const driveFile = (await drive.files.get({
       fileId: fileId,
       alt: "media",
-    })) as GaxiosResponse<StaticItemBody>;
+    })) as GaxiosResponse<Omit<ReceiptDB, "componentMap">>;
     return driveFile.data;
   } catch (e) {
     if (e instanceof GaxiosError) {
@@ -67,7 +67,9 @@ export async function listFiles(queryInfo: QueryInfo, userId: string) {
     const array = Object.entries(queryInfo.properties);
     properties = "properties has { ";
     for (let i = 0; i < array.length; i++) {
-      properties += `${array[i][0]}='${array[i][0]}'${i != array.length - 1 ? " and " : " } "}`;
+      properties += `${array[i][0]}='${array[i][0]}'${
+        i != array.length - 1 ? " and " : " } "
+      }`;
     }
   }
   const list = await drive.files.list({
