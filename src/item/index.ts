@@ -4,8 +4,12 @@ import { decodeJwt } from "jose";
 import { getReceipt } from "./routes/get";
 import { listReceipts } from "./routes/list";
 import { deleteReceipt } from "./routes/delete";
-import { patchReceipt } from "./routes/patch";
-import { ItemBody, PartialItemBody } from "./types";
+// import { patchReceipt } from "./routes/patch";
+import {
+  ItemBody,
+  // PartialItemBody
+} from "./types";
+import { componentRouter } from "./components";
 
 export const itemRouter = new Elysia()
   .resolve(({ cookie: { session } }) => {
@@ -47,14 +51,15 @@ export const itemRouter = new Elysia()
       }),
     },
   )
-  .patch(
-    "/edit/:id",
-    async ({ userId, params: { id }, body }) =>
-      await patchReceipt(userId, id, body),
-    {
-      params: t.Object({
-        id: t.String(),
-      }),
-      body: PartialItemBody,
-    },
-  );
+  .use(componentRouter);
+// .patch(
+//   "/edit/:id",
+//   async ({ userId, params: { id }, body }) =>
+//     await patchReceipt(userId, id, body),
+//   {
+//     params: t.Object({
+//       id: t.String(),
+//     }),
+//     body: PartialItemBody,
+//   },
+// );

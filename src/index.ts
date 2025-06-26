@@ -6,7 +6,9 @@ import { googleRouter } from "./google";
 import { authenticate } from "./auth/jwt";
 import { JWENotFoundError } from "./google/errors";
 import {
+  ComponentNotFoundError,
   NameAlreadyExistsError,
+  PatchBodyInvalidError,
   PatchBodyNotFoundError,
   ReceiptNotFoundError,
 } from "./item/errors";
@@ -16,6 +18,8 @@ const port = process.env.PORT || 3000;
 const app = new Elysia()
   .error({
     PatchBodyNotFoundError,
+    PatchBodyInvalidError,
+    ComponentNotFoundError,
     JWENotFoundError,
     ReceiptNotFoundError,
     NameAlreadyExistsError,
@@ -37,6 +41,12 @@ const app = new Elysia()
       case "PatchBodyNotFoundError":
         set.status = 409;
         return { error: "Missing body" };
+      case "PatchBodyInvalidError":
+        set.status = 400;
+        return { error: "Invalid body for requested comp" };
+      case "ComponentNotFoundError":
+        set.status = 400;
+        return { error: "Invalid Component" };
     }
     throw error;
   })

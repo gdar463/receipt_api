@@ -18,3 +18,17 @@ export class PatchBodyNotFoundError extends Error {
     this.name = "PatchBodyNotFoundError";
   }
 }
+
+export class PatchBodyInvalidError extends Error {
+  constructor() {
+    super("An invalid patch body was give for requested comp");
+    this.name = "PatchBodyInvalidError";
+  }
+}
+
+export class ComponentNotFoundError extends Error {
+  constructor() {
+    super("No Component was Found");
+    this.name = "ComponentNotFoundError";
+  }
+}
