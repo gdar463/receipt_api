@@ -1,8 +1,8 @@
 diff --git a/dist/context.d.ts b/dist/context.d.ts
-index 01f1e0edc582b41066aad7094900ef3aec03bf02..f9531e8f76ae65b04563661ef441fc0880c7c11c 100644
+index f691a8b574f63d01bbb3a6da460cd100a36ff7de..90be9519c30b998b44eafc1e2d3dfc9b84a5a7d6 100644
 --- a/dist/context.d.ts
 +++ b/dist/context.d.ts
-@@ -53,6 +53,7 @@ export type ErrorContext<in out Route extends RouteSchema = {}, in out Singleton
+@@ -54,6 +54,7 @@ export type ErrorContext<in out Route extends RouteSchema = {}, in out Singleton
      response: Route['response'];
  } & Singleton['decorator'] & Singleton['derive'] & Singleton['resolve']>;
  type PrettifyIfObject<T> = T extends object ? Prettify<T> : T;
@@ -10,7 +10,7 @@ index 01f1e0edc582b41066aad7094900ef3aec03bf02..f9531e8f76ae65b04563661ef441fc08
  export type Context<in out Route extends RouteSchema = {}, in out Singleton extends SingletonBase = {
      decorator: {};
      store: {};
-@@ -106,7 +107,7 @@ export type Context<in out Route extends RouteSchema = {}, in out Singleton exte
+@@ -107,7 +108,7 @@ export type Context<in out Route extends RouteSchema = {}, in out Singleton exte
      route: string;
      request: Request;
      store: Singleton['store'];
@@ -20,7 +20,7 @@ index 01f1e0edc582b41066aad7094900ef3aec03bf02..f9531e8f76ae65b04563661ef441fc08
      * @deprecated use `status` instead
      */
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index f09a2734427db9d76910ac810d69696d86b60e2b..ffa33e89400c7cf5b220d8aaa91a3eac01ffc638 100644
+index ac0d5716f9b4a0de88a6ec6be0b267ac015917bb..973eccba5333c2ff2bf8d74874dfaa4a1eeeb65e 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
 @@ -1811,7 +1811,7 @@ export default class Elysia<const in out BasePath extends string = '', const in
