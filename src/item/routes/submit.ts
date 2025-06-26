@@ -3,15 +3,10 @@ import { createFile } from "@/google/drive";
 import { v4 } from "uuid";
 import db from "@/db";
 import { receipts } from "@/db/schema";
-import type { StaticItemBody } from "@/item/types";
 import { NameAlreadyExistsError } from "@/item/errors";
 import { eq } from "drizzle-orm";
 
-export async function submit(
-  status: StatusFunc,
-  userId: string,
-  body: StaticItemBody,
-) {
+export async function submit(status: StatusFunc, userId: string, body: any) {
   const id = v4();
   const count = await db.$count(receipts, eq(receipts.name, body.name));
   if (count == 1) {
