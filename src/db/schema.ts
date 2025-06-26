@@ -1,11 +1,11 @@
-import { v4 } from "uuid";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { relations, sql } from "drizzle-orm";
+import { nanoid } from "nanoid";
 
 export const users = sqliteTable("users", {
   id: text()
     .primaryKey()
-    .$defaultFn(() => v4()),
+    .$defaultFn(() => nanoid(32)),
   username: text().unique().notNull(),
   password: text().notNull(),
   googleInfo: text(),
