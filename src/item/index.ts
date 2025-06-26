@@ -4,6 +4,7 @@ import { decodeJwt } from "jose";
 import { getReceipt } from "./routes/get";
 import { listReceipts } from "./routes/list";
 import { deleteReceipt } from "./routes/delete";
+import { receiptSchema } from "./types";
 
 export const itemRouter = new Elysia()
   .resolve(({ cookie: { session } }) => {
@@ -21,6 +22,9 @@ export const itemRouter = new Elysia()
   .post(
     "/submit",
     async ({ status, userId, body }) => await submit(status, userId, body),
+    {
+      body: receiptSchema,
+    }
   )
   .get(
     "/get/:id",
@@ -29,7 +33,7 @@ export const itemRouter = new Elysia()
       params: t.Object({
         id: t.String(),
       }),
-    },
+    }
   )
   .get("/get", async ({ userId }) => await listReceipts(userId))
   .delete(
@@ -40,5 +44,5 @@ export const itemRouter = new Elysia()
       params: t.Object({
         id: t.String(),
       }),
-    },
+    }
   );
