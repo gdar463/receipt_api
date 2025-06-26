@@ -1,3 +1,6 @@
+diff --git a/node_modules/elysia/.bun-tag-b2a59cf9d21b84db b/.bun-tag-b2a59cf9d21b84db
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/dist/context.d.ts b/dist/context.d.ts
 index f691a8b574f63d01bbb3a6da460cd100a36ff7de..90be9519c30b998b44eafc1e2d3dfc9b84a5a7d6 100644
 --- a/dist/context.d.ts
