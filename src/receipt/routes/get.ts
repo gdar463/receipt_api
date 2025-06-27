@@ -11,7 +11,13 @@ export async function getReceipt(
   map: number | undefined
 ) {
   const rows = await db
-    .select()
+    .select({
+      id: receipts.id,
+      name: receipts.name,
+      createdAt: receipts.createdAt,
+      updatedAt: receipts.updatedAt,
+      components: receipts.components,
+    })
     .from(receipts)
     .where(and(eq(receipts.userId, userId), eq(receipts.id, receiptId)));
   if (rows.length == 0) {
