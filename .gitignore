@@ -150,3 +150,6 @@ drizzle/
 
 # Bruno
 bruno/
+
+# Gemini CLI
+.gemini/
