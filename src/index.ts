@@ -9,7 +9,7 @@ import { logger } from "./logger";
 const port = process.env.PORT || 3000;
 
 const app = new Elysia()
-  .onError(({ code, error, set, path, request: { method } }) => {
+  .onError(({ code, set, path, request: { method } }) => {
     switch (code) {
       case "NOT_FOUND":
         logger.error("errored_request", {
