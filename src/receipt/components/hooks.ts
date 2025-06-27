@@ -46,6 +46,14 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
       };
 
       switch (code) {
+        case "VALIDATION":
+          logger.error("errored_request", {
+            ...commonLog,
+            router: "components",
+            error_id: "VALIDATION",
+          });
+          set.status = 400;
+          return { error: "Invalid request" };
         case "ComponentNotFoundError":
           logger.error("errored_request", {
             ...commonLog,
