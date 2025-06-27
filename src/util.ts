@@ -8,5 +8,5 @@ export function promoteHooks(event: Partial<LifeCycleStore>) {
 }
 
 export function now() {
-  return new Date(Date.now());
+  return new Date();
 }
