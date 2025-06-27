@@ -58,6 +58,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
             router: "components",
             error_id: "VALIDATION",
           });
+          if (process.env.NODE_ENV === "development") return error.message;
           set.status = 400;
           return { error: "Invalid request" };
         case "ComponentNotFoundError":
