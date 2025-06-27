@@ -31,12 +31,47 @@ const app = new Elysia()
   // protected section
   .guard(
     {
-      async beforeHandle({ cookie: { session }, status }) {
+      async beforeHandle({
+        logger,
+        request_id,
+        request_time,
+        route,
+        request: { method },
+        set: { headers },
+        cookie: { session },
+        status,
+      }) {
         if (session.value == null) {
+          logger.warn("authentication_failed", {
+            path: route,
+            method,
+            request_id,
+            status: 401,
+            error_id: "NotLoggedIn",
+            timing: performance.now() - request_time,
+            ip:
+              headers["x-forwarded-for"] ||
+              headers["x-real-ip"] ||
+              headers["x-client-ip"] ||
+              null,
+          });
           return status(401, { error: "Not Logged In" });
         }
         const auth = await authenticate(session.value);
         if (auth === false) {
+          logger.warn("authentication_failed", {
+            path: route,
+            method,
+            request_id,
+            status: 403,
+            error_id: "InvalidToken",
+            timing: performance.now() - request_time,
+            ip:
+              headers["x-forwarded-for"] ||
+              headers["x-real-ip"] ||
+              headers["x-client-ip"] ||
+              null,
+          });
           return status(403, { error: "Invalid Token" });
         }
       },
