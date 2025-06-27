@@ -3,7 +3,6 @@ import { submit } from "./routes/submit";
 import { getReceipt } from "./routes/get";
 import { listReceipts } from "./routes/list";
 import { deleteReceipt } from "./routes/delete";
-import { receiptSchema } from "./types";
 import { receiptHooks } from "./hooks";
 
 export const receiptRouter = new Elysia({ prefix: "/receipt" })
@@ -12,7 +11,9 @@ export const receiptRouter = new Elysia({ prefix: "/receipt" })
     "/",
     async ({ status, userId, body }) => await submit(status, userId, body),
     {
-      body: receiptSchema,
+      body: t.Object({
+        name: t.String(),
+      }),
     }
   )
   .get("/", async ({ userId }) => await listReceipts(userId))

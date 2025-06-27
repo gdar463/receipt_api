@@ -4,12 +4,11 @@ import db from "@/db";
 import { receipts } from "@/db/schema";
 import { NameAlreadyExistsError } from "@/receipt/errors";
 import { eq } from "drizzle-orm";
-import type { Receipt } from "../types";
 
 export async function submit(
   status: StatusFunc,
   userId: string,
-  body: Receipt
+  body: { name: string }
 ) {
   const id = nanoid(32);
   const count = await db.$count(receipts, eq(receipts.name, body.name));
@@ -20,7 +19,7 @@ export async function submit(
     id,
     name: body.name,
     userId,
-    components: body.components,
+    components: [],
     createdAt: new Date(Date.now()),
     updatedAt: new Date(Date.now()),
   });
