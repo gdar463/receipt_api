@@ -6,8 +6,9 @@ import db from "@/db";
 import { eq, and } from "drizzle-orm";
 import { ReceiptNotFoundError } from "@/receipt/errors";
 import { createComponentMap } from "../utils";
-import { ComponentNotFoundError } from "../errors";
+import { ComponentNotFoundError, CountryNotFoundError } from "../errors";
 import { now } from "@/util";
+import countries from "i18n-iso-countries";
 
 export const countryRouter = new Elysia({ tags: ["components"] })
   .resolve(({ cookie: { session } }) => {
@@ -16,6 +17,9 @@ export const countryRouter = new Elysia({ tags: ["components"] })
   .put(
     "/country",
     async ({ status, params: { id }, body, userId }) => {
+      if (!countries.isValid(body.code)) {
+        throw new CountryNotFoundError();
+      }
       const rows = await db
         .select({ components: receipts.components })
         .from(receipts)
@@ -27,9 +31,12 @@ export const countryRouter = new Elysia({ tags: ["components"] })
       const compMap = createComponentMap(comps);
 
       if (compMap.country) {
-        // TODO: Update
+        comps[compMap.country.index].data = body;
       } else {
-        // TODO: Add
+        comps.push({
+          type: "country",
+          data: body,
+        });
       }
 
       await db
@@ -64,7 +71,7 @@ export const countryRouter = new Elysia({ tags: ["components"] })
         throw new ComponentNotFoundError();
       }
 
-      // TODO: Implement
+      comps.splice(compMap.country.index, 1);
 
       await db
         .update(receipts)

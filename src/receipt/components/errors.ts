@@ -4,3 +4,10 @@ export class ComponentNotFoundError extends Error {
     this.name = "ComponentNotFoundError";
   }
 }
+
+export class CountryNotFoundError extends Error {
+  constructor() {
+    super("No Country was Found");
+    this.name = "CountryNotFoundError";
+  }
+}
