@@ -1,5 +1,4 @@
 import { type StatusFunc } from "elysia";
-import { createFile } from "@/google/drive";
 import { nanoid } from "nanoid";
 import db from "@/db";
 import { receipts } from "@/db/schema";
@@ -17,19 +16,13 @@ export async function submit(
   if (count == 1) {
     throw new NameAlreadyExistsError();
   }
-  const driveId = await createFile(
-    {
-      mime: "application/json",
-      name: `${id}.json`,
-      body: JSON.stringify(body),
-    },
-    userId
-  );
   await db.insert(receipts).values({
     id,
     name: body.name,
-    driveId: driveId!,
     userId,
+    components: body.components,
+    createdAt: new Date(Date.now()),
+    updatedAt: new Date(Date.now()),
   });
   return status(200, { id });
 }

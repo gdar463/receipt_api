@@ -4,7 +4,12 @@ import { eq } from "drizzle-orm";
 
 export async function listReceipts(userId: string) {
   const list = await db
-    .select({ id: receipts.id, name: receipts.name })
+    .select({
+      id: receipts.id,
+      name: receipts.name,
+      createdAt: receipts.createdAt,
+      updatedAt: receipts.updatedAt,
+    })
     .from(receipts)
     .where(eq(receipts.userId, userId));
   return list;
