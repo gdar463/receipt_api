@@ -1,15 +1,76 @@
 import Elysia, { t } from "elysia";
 import { totalComponent } from "../validation";
+import { decodeJwt } from "jose";
+import { receipts } from "@/db/schema";
+import db from "@/db";
+import { eq, and } from "drizzle-orm";
+import { ReceiptNotFoundError } from "@/receipt/errors";
+import { createComponentMap } from "../utils";
+import { ComponentNotFoundError } from "../errors";
 
 export const totalRouter = new Elysia({ tags: ["components"] })
-  .put("/total", ({ params, body }) => {}, {
-    body: totalComponent.properties.data,
-    params: t.Object({
-      id: t.String(),
-    }),
+  .resolve(({ cookie: { session } }) => {
+    return { userId: decodeJwt(session.value!).id as string };
   })
-  .delete("/total", ({ params }) => {}, {
-    params: t.Object({
-      id: t.String(),
-    }),
-  });
+  .put(
+    "/total",
+    async ({ status, params: { id }, body, userId }) => {
+      const rows = await db
+        .select({ components: receipts.components })
+        .from(receipts)
+        .where(and(eq(receipts.userId, userId), eq(receipts.id, id)));
+      if (rows.length === 0) {
+        throw new ReceiptNotFoundError();
+      }
+      const comps = rows[0].components;
+      const compMap = createComponentMap(comps);
+
+      if (compMap.total) {
+        // TODO: Update
+      } else {
+        // TODO: Add
+      }
+
+      await db
+        .update(receipts)
+        .set({ components: comps })
+        .where(eq(receipts.id, id));
+      return status(204);
+    },
+    {
+      body: totalComponent.properties.data,
+      params: t.Object({
+        id: t.String(),
+      }),
+    }
+  )
+  .delete(
+    "/total",
+    async ({ status, params: { id }, userId }) => {
+      const rows = await db
+        .select({ components: receipts.components })
+        .from(receipts)
+        .where(and(eq(receipts.userId, userId), eq(receipts.id, id)));
+      if (rows.length === 0) {
+        throw new ReceiptNotFoundError();
+      }
+      const comps = rows[0].components;
+      const compMap = createComponentMap(comps);
+      if (!compMap.total) {
+        throw new ComponentNotFoundError();
+      }
+
+      // TODO: Implement
+
+      await db
+        .update(receipts)
+        .set({ components: comps })
+        .where(eq(receipts.id, id));
+      return status(204);
+    },
+    {
+      params: t.Object({
+        id: t.String(),
+      }),
+    }
+  );
