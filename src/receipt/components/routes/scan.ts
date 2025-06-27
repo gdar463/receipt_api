@@ -1,13 +1,13 @@
 import Elysia, { t } from "elysia";
-import { scanComponent } from "../validation";
 import { decodeJwt } from "jose";
 import { receipts } from "@/db/schema";
 import db from "@/db";
 import { eq, and } from "drizzle-orm";
 import { ReceiptNotFoundError } from "@/receipt/errors";
 import { createComponentMap } from "../utils";
-import { ComponentNotFoundError } from "../errors";
+import { ComponentNotFoundError, GoogleError } from "../errors";
 import { now } from "@/util";
+import { createFile, deleteFile } from "@/google/drive";
 
 export const scanRouter = new Elysia({ tags: ["components"] })
   .resolve(({ cookie: { session } }) => {
@@ -27,10 +27,29 @@ export const scanRouter = new Elysia({ tags: ["components"] })
       const compMap = createComponentMap(comps);
 
       if (compMap.scan) {
-        // TODO: Update
-      } else {
-        // TODO: Add
+        await deleteFile(compMap.scan.data.driveId, userId);
+        comps.splice(compMap.scan.index, 1);
       }
+      const driveId = await createFile(
+        {
+          name: id,
+          mime: body.file.type,
+          body: body.file.stream(),
+          properties: {
+            orig_name: body.file.name,
+          },
+        },
+        userId
+      );
+      if (!driveId) {
+        throw new GoogleError();
+      }
+      comps.push({
+        type: "scan",
+        data: {
+          driveId,
+        },
+      });
 
       await db
         .update(receipts)
@@ -42,7 +61,9 @@ export const scanRouter = new Elysia({ tags: ["components"] })
       return status(204);
     },
     {
-      body: scanComponent.properties.data,
+      body: t.Object({
+        file: t.File({ type: "image" }),
+      }),
       params: t.Object({
         id: t.String(),
       }),
@@ -64,7 +85,8 @@ export const scanRouter = new Elysia({ tags: ["components"] })
         throw new ComponentNotFoundError();
       }
 
-      // TODO: Implement
+      await deleteFile(compMap.scan.data.driveId, userId);
+      comps.splice(compMap.scan.index, 1);
 
       await db
         .update(receipts)
