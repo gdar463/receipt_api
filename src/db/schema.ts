@@ -1,6 +1,7 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { relations, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
+import type { ReceiptComponent } from "@/receipt/components/types";
 
 export const users = sqliteTable("users", {
   id: text("id")
@@ -30,7 +31,10 @@ export const receipts = sqliteTable("receipts", {
   updatedAt: integer("updated_at", { mode: "timestamp" })
     .default(new Date(0))
     .notNull(),
-  components: text("components", { mode: "json" }).default({}).notNull(),
+  components: text("components", { mode: "json" })
+    .$type<ReceiptComponent[]>()
+    .default([])
+    .notNull(),
 });
 
 export const receiptsRelations = relations(receipts, ({ one }) => ({
