@@ -17,10 +17,12 @@ export const itemRouter = new Elysia()
   )
   .get(
     "/get/:id",
-    async ({ userId, params: { id } }) => await getReceipt(userId, id),
+    async ({ userId, params: { id, map } }) =>
+      await getReceipt(userId, id, map),
     {
       params: t.Object({
         id: t.String(),
+        map: t.Nullable(t.Number()),
       }),
     }
   )

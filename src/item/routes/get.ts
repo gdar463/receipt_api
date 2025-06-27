@@ -3,8 +3,13 @@ import { receipts } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { ReceiptNotFoundError } from "@/item/errors";
 import type { ReceiptDB } from "../types";
+import { createComponentMap } from "../components/utils";
 
-export async function getReceipt(userId: string, receiptId: string) {
+export async function getReceipt(
+  userId: string,
+  receiptId: string,
+  map: number | null
+) {
   const rows = await db
     .select()
     .from(receipts)
@@ -13,5 +18,11 @@ export async function getReceipt(userId: string, receiptId: string) {
     throw new ReceiptNotFoundError();
   }
   const receipt = rows[0] as ReceiptDB;
-  return receipt;
+  if (map != null) {
+    return receipt;
+  }
+  return {
+    ...receipt,
+    componentMap: createComponentMap(receipt.components),
+  };
 }
