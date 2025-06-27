@@ -4,6 +4,7 @@ import db from "@/db";
 import { receipts } from "@/db/schema";
 import { NameAlreadyExistsError } from "@/receipt/errors";
 import { eq } from "drizzle-orm";
+import { now } from "@/util";
 
 export async function submit(
   status: StatusFunc,
@@ -20,8 +21,8 @@ export async function submit(
     name: body.name,
     userId,
     components: [],
-    createdAt: new Date(Date.now()),
-    updatedAt: new Date(Date.now()),
+    createdAt: now(),
+    updatedAt: now(),
   });
   return status(200, { id });
 }

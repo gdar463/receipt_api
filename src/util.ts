@@ -6,3 +6,7 @@ export function promoteHooks(event: Partial<LifeCycleStore>) {
   promoteEvent(event.transform, "scoped");
   promoteEvent(event.afterResponse, "scoped");
 }
+
+export function now() {
+  return new Date(Date.now());
+}
