@@ -12,6 +12,6 @@ export async function getReceipt(userId: string, receiptId: string) {
   if (rows.length == 0) {
     throw new ReceiptNotFoundError();
   }
-  const receipt = rows[0] as Omit<ReceiptDB, "componentMap">;
+  const receipt = rows[0] as ReceiptDB;
   return receipt;
 }
