@@ -7,7 +7,7 @@ import { totalRouter } from "./routes/total";
 import { componentsHooks } from "./hooks";
 
 export const componentsRouter = new Elysia({
-  prefix: "/receipt/:id/component",
+  prefix: "/:id/component",
 })
   .use(componentsHooks)
   .use(countryRouter)
