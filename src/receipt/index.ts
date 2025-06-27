@@ -4,8 +4,10 @@ import { getReceipt } from "./routes/get";
 import { listReceipts } from "./routes/list";
 import { deleteReceipt } from "./routes/delete";
 import { receiptHooks } from "./hooks";
+import { componentsRouter } from "./components";
 
 export const receiptRouter = new Elysia({ prefix: "/receipt" })
+  .use(componentsRouter)
   .use(receiptHooks)
   .post(
     "/",
