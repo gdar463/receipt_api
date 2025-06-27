@@ -34,11 +34,11 @@ export const authRouter = new Elysia({ prefix: "/auth" })
         .post(
           "/signup",
           async ({ body, cookie: { session }, status }) =>
-            await signup(body, session, status),
+            await signup(body, session, status)
         )
         .post(
           "/login",
           async ({ body, cookie: { session }, status }) =>
-            await login(body, session, status),
-        ),
+            await login(body, session, status)
+        )
   );
