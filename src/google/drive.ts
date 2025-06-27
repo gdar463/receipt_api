@@ -2,8 +2,8 @@ import { google } from "googleapis";
 import { getAuthClient } from "./token";
 import { GaxiosError, type GaxiosResponse } from "gaxios";
 import { Readable } from "stream";
-import { ReceiptNotFoundError } from "@/item/errors";
-import type { ReceiptDB } from "@/item/types";
+import { ReceiptNotFoundError } from "@/receipt/errors";
+import type { ReceiptDB } from "@/receipt/types";
 
 export type FileInfo = {
   name: string;

@@ -8,14 +8,14 @@ import {
   ReceiptNotFoundError,
 } from "./errors";
 
-export const itemHooks = new Elysia({ name: "itemHooks" })
+export const receiptHooks = new Elysia({ name: "receiptHooks" })
   .error({
     JWENotFoundError,
     PatchBodyNotFoundError,
     ReceiptNotFoundError,
     NameAlreadyExistsError,
   })
-  .use(requestLogger("item"))
+  .use(requestLogger("receipt"))
   .resolve({ as: "scoped" }, ({ cookie: { session } }) => {
     return { userId: decodeJwt(session.value!).id as string };
   })
@@ -64,7 +64,7 @@ export const itemHooks = new Elysia({ name: "itemHooks" })
         case "ReceiptNotFoundError":
           logger.error("errored_request", {
             ...commonLog,
-            router: "item",
+            router: "receipt",
             error_id: "ReceiptNotFoundError",
           });
           set.status = 404;
@@ -72,7 +72,7 @@ export const itemHooks = new Elysia({ name: "itemHooks" })
         case "NameAlreadyExistsError":
           logger.error("errored_request", {
             ...commonLog,
-            router: "item",
+            router: "receipt",
             error_id: "NameAlreadyExistsError",
           });
           set.status = 409;
@@ -80,7 +80,7 @@ export const itemHooks = new Elysia({ name: "itemHooks" })
         case "PatchBodyNotFoundError":
           logger.error("errored_request", {
             ...commonLog,
-            router: "item",
+            router: "receipt",
             error_id: "PatchBodyNotFoundError",
           });
           set.status = 409;
@@ -88,7 +88,7 @@ export const itemHooks = new Elysia({ name: "itemHooks" })
         default:
           logger.error("errored_request", {
             ...commonLog,
-            router: "item",
+            router: "receipt",
             error_id: code,
           });
           return { error: error };

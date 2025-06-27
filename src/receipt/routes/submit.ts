@@ -2,7 +2,7 @@ import { type StatusFunc } from "elysia";
 import { nanoid } from "nanoid";
 import db from "@/db";
 import { receipts } from "@/db/schema";
-import { NameAlreadyExistsError } from "@/item/errors";
+import { NameAlreadyExistsError } from "@/receipt/errors";
 import { eq } from "drizzle-orm";
 import type { Receipt } from "../types";
 

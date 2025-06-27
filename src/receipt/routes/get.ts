@@ -1,7 +1,7 @@
 import db from "@/db";
 import { receipts } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { ReceiptNotFoundError } from "@/item/errors";
+import { ReceiptNotFoundError } from "@/receipt/errors";
 import type { ReceiptDB } from "../types";
 import { createComponentMap } from "../components/utils";
 

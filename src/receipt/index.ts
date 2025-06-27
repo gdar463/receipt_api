@@ -4,10 +4,10 @@ import { getReceipt } from "./routes/get";
 import { listReceipts } from "./routes/list";
 import { deleteReceipt } from "./routes/delete";
 import { receiptSchema } from "./types";
-import { itemHooks } from "./hooks";
+import { receiptHooks } from "./hooks";
 
-export const itemRouter = new Elysia()
-  .use(itemHooks)
+export const receiptRouter = new Elysia()
+  .use(receiptHooks)
   .post(
     "/submit",
     async ({ status, userId, body }) => await submit(status, userId, body),

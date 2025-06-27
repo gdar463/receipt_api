@@ -1,5 +1,5 @@
 import { authRouter } from "@/auth";
-import { itemRouter } from "@/item";
+import { receiptRouter } from "@/receipt";
 import { test } from "./test";
 import Elysia from "elysia";
 import { googleRouter } from "./google";
@@ -44,7 +44,7 @@ const app = new Elysia()
         }
       },
     },
-    (app) => app.use(itemRouter).use(googleRouter)
+    (app) => app.use(receiptRouter).use(googleRouter)
   )
   // end protected section
   .listen(port);
