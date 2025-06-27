@@ -51,7 +51,7 @@ export const componentsHooks = new Elysia({ name: "componentsHooks" })
             router: "components",
             error_id: "JWENotFoundError",
           });
-          set.status = 400;
+          set.status = 404;
           return { error: "Google not connected to acoount" };
         default:
           logger.error("errored_request", {
