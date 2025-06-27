@@ -4,10 +4,12 @@ import { scanRouter } from "./routes/scan";
 import { merchantRouter } from "./routes/merchant";
 import { datetimeRouter } from "./routes/datetime";
 import { totalRouter } from "./routes/total";
+import { componentsHooks } from "./hooks";
 
 export const componentsRouter = new Elysia({
   prefix: "/item/:id/component",
 })
+  .use(componentsHooks)
   .use(countryRouter)
   .use(scanRouter)
   .use(merchantRouter)
