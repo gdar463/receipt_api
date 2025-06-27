@@ -27,9 +27,12 @@ export const merchantRouter = new Elysia({ tags: ["components"] })
       const compMap = createComponentMap(comps);
 
       if (compMap.merchant) {
-        // TODO: Update
+        comps[compMap.merchant.index].data = body;
       } else {
-        // TODO: Add
+        comps.push({
+          type: "merchant",
+          data: body,
+        });
       }
 
       await db
@@ -64,7 +67,7 @@ export const merchantRouter = new Elysia({ tags: ["components"] })
         throw new ComponentNotFoundError();
       }
 
-      // TODO: Implement
+      comps.splice(compMap.merchant.index, 1);
 
       await db
         .update(receipts)
