@@ -7,7 +7,9 @@ export type Receipt = {
   components: ReceiptComponent[];
 };
 
-export type ComponentMap = Partial<Record<ComponentType, ReceiptComponent>>;
+export type ComponentMap = Partial<
+  Record<ComponentType, ReceiptComponent & { index: number }>
+>;
 
 export type ReceiptDB = Receipt & {
   id: string;
@@ -20,7 +22,10 @@ export const receiptSchema = t.Object({
   components: t.Array(allComponents),
 });
 
-export const componentMap = t.Record(t.String(), allComponents);
+export const componentMap = t.Record(
+  t.String(),
+  t.Composite([allComponents, t.Object({ index: t.Number() })])
+);
 
 export const receiptDBSchema = t.Composite([
   receiptSchema,
