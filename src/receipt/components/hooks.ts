@@ -62,7 +62,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
             error_id: "JWENotFoundError",
           });
           set.status = 404;
-          return { error: "Google not connected to acoount" };
+          return { error: "Component Not Found" };
         case "CountryNotFoundError":
           logger.error("errored_request", {
             ...commonLog,
