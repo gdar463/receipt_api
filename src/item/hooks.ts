@@ -23,6 +23,7 @@ export const itemHooks = new Elysia({ name: "itemHooks" })
     ({
       logger,
       code,
+      error,
       set,
       request_id,
       request: { method },
@@ -84,6 +85,13 @@ export const itemHooks = new Elysia({ name: "itemHooks" })
           });
           set.status = 409;
           return { error: "Missing body" };
+        default:
+          logger.error("errored_request", {
+            ...commonLog,
+            router: "item",
+            error_id: code,
+          });
+          return error;
       }
     }
   );
