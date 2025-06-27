@@ -8,7 +8,7 @@ import { createComponentMap } from "../components/utils";
 export async function getReceipt(
   userId: string,
   receiptId: string,
-  map: number | null
+  map: number | undefined
 ) {
   const rows = await db
     .select()
@@ -18,7 +18,7 @@ export async function getReceipt(
     throw new ReceiptNotFoundError();
   }
   const receipt = rows[0] as ReceiptDB;
-  if (map != null) {
+  if (map == undefined) {
     return receipt;
   }
   return {

@@ -18,12 +18,14 @@ export const receiptRouter = new Elysia({ prefix: "/receipt" })
   .get("/", async ({ userId }) => await listReceipts(userId))
   .get(
     "/:id",
-    async ({ userId, params: { id, map } }) =>
+    async ({ userId, params: { id }, query: { map } }) =>
       await getReceipt(userId, id, map),
     {
       params: t.Object({
         id: t.String(),
-        map: t.Nullable(t.Number()),
+      }),
+      query: t.Object({
+        map: t.Optional(t.Number()),
       }),
     }
   )
