@@ -66,8 +66,9 @@ export const requestLogger = (router = "") =>
         set: { headers, status },
       }) => {
         if (
-          !status?.toString().startsWith("4") ||
-          !status?.toString().startsWith("5")
+          status &&
+          !status.toString().startsWith("4") &&
+          !status.toString().startsWith("5")
         ) {
           logger.info("handled_request", {
             path: route,
