@@ -55,7 +55,7 @@ const app = new Elysia()
         }
       },
     },
-    (app) => app.use(itemRouter).use(googleRouter),
+    (app) => app.use(itemRouter).use(googleRouter)
   )
   // end protected section
   .listen(port);
