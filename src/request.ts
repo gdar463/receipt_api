@@ -13,7 +13,7 @@ export const requestDecor = new Elysia({ name: "requestDecor" }).derive(
 );
 
 export const requestLogger = (router = "") =>
-  new Elysia()
+  new Elysia({ name: `requestLogger-${router}` })
     .use(requestDecor)
     .decorate("logger", logger)
     .onTransform(
