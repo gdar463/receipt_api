@@ -32,6 +32,30 @@ export const requestLogger = (router = "") =>
         });
       }
     )
+    .onError(
+      { as: "scoped" },
+      ({ code, set, route, request: { method }, request_id, request_time }) => {
+        if (code === "VALIDATION") {
+          logger.error("errored_request", {
+            path: route,
+            method,
+            request_id: request_id || null,
+            status: set.status,
+            router,
+            error_id: code,
+            timing:
+              request_time != undefined
+                ? performance.now() - request_time
+                : null,
+            ip:
+              set.headers["x-forwarded-for"] ||
+              set.headers["x-real-ip"] ||
+              set.headers["x-client-ip"] ||
+              null,
+          });
+        }
+      }
+    )
     .onAfterResponse(
       { as: "scoped" },
       ({
@@ -59,25 +83,5 @@ export const requestLogger = (router = "") =>
               null,
           });
         }
-      }
-    )
-    .onError(
-      { as: "scoped" },
-      ({ code, set, route, request: { method }, request_id, request_time }) => {
-        logger.error("errored_request", {
-          path: route,
-          method,
-          request_id: request_id || null,
-          status: set.status,
-          router,
-          error_id: code,
-          timing:
-            request_time != undefined ? performance.now() - request_time : null,
-          ip:
-            set.headers["x-forwarded-for"] ||
-            set.headers["x-real-ip"] ||
-            set.headers["x-client-ip"] ||
-            null,
-        });
       }
     );
