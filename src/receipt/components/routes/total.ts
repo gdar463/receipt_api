@@ -7,6 +7,7 @@ import { eq, and } from "drizzle-orm";
 import { ReceiptNotFoundError } from "@/receipt/errors";
 import { createComponentMap } from "../utils";
 import { ComponentNotFoundError } from "../errors";
+import { now } from "@/util";
 
 export const totalRouter = new Elysia({ tags: ["components"] })
   .resolve(({ cookie: { session } }) => {
@@ -33,7 +34,10 @@ export const totalRouter = new Elysia({ tags: ["components"] })
 
       await db
         .update(receipts)
-        .set({ components: comps })
+        .set({
+          components: comps,
+          updatedAt: now(),
+        })
         .where(eq(receipts.id, id));
       return status(204);
     },
@@ -64,7 +68,10 @@ export const totalRouter = new Elysia({ tags: ["components"] })
 
       await db
         .update(receipts)
-        .set({ components: comps })
+        .set({
+          components: comps,
+          updatedAt: now(),
+        })
         .where(eq(receipts.id, id));
       return status(204);
     },
