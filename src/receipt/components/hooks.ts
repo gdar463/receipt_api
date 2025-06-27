@@ -2,8 +2,9 @@ import Elysia from "elysia";
 import { ComponentNotFoundError } from "./errors";
 import { requestLogger } from "@/request";
 import { decodeJwt } from "jose";
+import { promoteHooks } from "@/util";
 
-export const componentsHooks = new Elysia({ name: "componentsHooks" })
+const componentsHooks = new Elysia({ name: "componentsHooks" })
   .error({
     ComponentNotFoundError,
   })
@@ -63,3 +64,6 @@ export const componentsHooks = new Elysia({ name: "componentsHooks" })
       }
     }
   );
+
+promoteHooks(componentsHooks.event);
+export { componentsHooks };

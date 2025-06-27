@@ -24,10 +24,7 @@ const app = new Elysia()
         });
         set.status = 404;
         return { error: "Not Found" };
-      case "VALIDATION":
-        return;
     }
-    throw error;
   })
   .get("/test", async () => await test())
   .use(authRouter)

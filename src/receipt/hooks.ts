@@ -7,8 +7,9 @@ import {
   PatchBodyNotFoundError,
   ReceiptNotFoundError,
 } from "./errors";
+import { promoteHooks } from "@/util";
 
-export const receiptHooks = new Elysia({ name: "receiptHooks" })
+const receiptHooks = new Elysia({ name: "receiptHooks" })
   .error({
     JWENotFoundError,
     PatchBodyNotFoundError,
@@ -20,6 +21,7 @@ export const receiptHooks = new Elysia({ name: "receiptHooks" })
     return { userId: decodeJwt(session.value!).id as string };
   })
   .onError(
+    { as: "scoped" },
     ({
       logger,
       code,
@@ -53,6 +55,14 @@ export const receiptHooks = new Elysia({ name: "receiptHooks" })
       };
 
       switch (code) {
+        case "VALIDATION":
+          logger.error("errored_request", {
+            ...commonLog,
+            router: "receipt",
+            error_id: "VALIDATION",
+          });
+          set.status = 400;
+          return { error: "Invalid request" };
         case "JWENotFoundError":
           logger.error("errored_request", {
             ...commonLog,
@@ -95,3 +105,5 @@ export const receiptHooks = new Elysia({ name: "receiptHooks" })
       }
     }
   );
+promoteHooks(receiptHooks.event);
+export { receiptHooks };

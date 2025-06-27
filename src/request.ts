@@ -53,6 +53,8 @@ export const requestLogger = (router = "") =>
               set.headers["x-client-ip"] ||
               null,
           });
+          set.status = 400;
+          return { error: "Invalid request" };
         }
       }
     )
