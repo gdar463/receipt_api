@@ -6,17 +6,18 @@ import { deleteReceipt } from "./routes/delete";
 import { receiptSchema } from "./types";
 import { receiptHooks } from "./hooks";
 
-export const receiptRouter = new Elysia()
+export const receiptRouter = new Elysia({ prefix: "/receipt" })
   .use(receiptHooks)
   .post(
-    "/submit",
+    "/",
     async ({ status, userId, body }) => await submit(status, userId, body),
     {
       body: receiptSchema,
     }
   )
+  .get("/", async ({ userId }) => await listReceipts(userId))
   .get(
-    "/get/:id",
+    "/:id",
     async ({ userId, params: { id, map } }) =>
       await getReceipt(userId, id, map),
     {
@@ -26,9 +27,8 @@ export const receiptRouter = new Elysia()
       }),
     }
   )
-  .get("/get", async ({ userId }) => await listReceipts(userId))
   .delete(
-    "/delete/:id",
+    "/:id",
     async ({ status, userId, params: { id } }) =>
       await deleteReceipt(status, userId, id),
     {
