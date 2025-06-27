@@ -27,9 +27,12 @@ export const datetimeRouter = new Elysia({ tags: ["components"] })
       const compMap = createComponentMap(comps);
 
       if (compMap.datetime) {
-        // TODO: Update
+        comps[compMap.datetime.index].data = body;
       } else {
-        // TODO: Add
+        comps.push({
+          type: "datetime",
+          data: body,
+        });
       }
 
       await db
@@ -64,7 +67,7 @@ export const datetimeRouter = new Elysia({ tags: ["components"] })
         throw new ComponentNotFoundError();
       }
 
-      // TODO: Implement
+      comps.splice(compMap.datetime.index, 1);
 
       await db
         .update(receipts)
