@@ -4,7 +4,7 @@ import { createSecretKey } from "crypto";
 import { eq } from "drizzle-orm";
 import { google } from "googleapis";
 import { compactDecrypt, CompactEncrypt } from "jose";
-import { JWENotFoundError } from "./errors";
+import { JWENotFoundError } from "@/item/errors";
 
 export type GoogleInfo = {
   accessToken: string;

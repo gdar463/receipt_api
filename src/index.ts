@@ -4,39 +4,26 @@ import { test } from "./test";
 import Elysia from "elysia";
 import { googleRouter } from "./google";
 import { authenticate } from "./auth/jwt";
-import { JWENotFoundError } from "./google/errors";
-import {
-  NameAlreadyExistsError,
-  PatchBodyNotFoundError,
-  ReceiptNotFoundError,
-} from "./item/errors";
+import { logger } from "./logger";
 
 const port = process.env.PORT || 3000;
 
 const app = new Elysia()
-  .error({
-    PatchBodyNotFoundError,
-    JWENotFoundError,
-    ReceiptNotFoundError,
-    NameAlreadyExistsError,
-  })
-  .onError(({ code, error, set }) => {
+  .onError(({ code, error, set, path, request: { method } }) => {
     switch (code) {
       case "NOT_FOUND":
+        logger.error("errored_request", {
+          path,
+          method,
+          status: 404,
+          ip:
+            set.headers["x-forwarded-for"] ||
+            set.headers["x-real-ip"] ||
+            set.headers["x-client-ip"] ||
+            null,
+        });
         set.status = 404;
         return { error: "Not Found" };
-      case "JWENotFoundError":
-        set.status = 401;
-        return { error: "Google not connected to account" };
-      case "ReceiptNotFoundError":
-        set.status = 404;
-        return { error: "Receipt Not Found" };
-      case "NameAlreadyExistsError":
-        set.status = 409;
-        return { error: "Name already exists" };
-      case "PatchBodyNotFoundError":
-        set.status = 409;
-        return { error: "Missing body" };
     }
     throw error;
   })

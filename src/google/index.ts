@@ -5,6 +5,7 @@ import Elysia, { t } from "elysia";
 import { google } from "googleapis";
 import { decodeJwt } from "jose";
 import { encryptInfo } from "./token";
+import { requestLogger } from "@/request";
 
 const authClient = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -15,6 +16,7 @@ const authClient = new google.auth.OAuth2(
 const scopes = ["openid", "https://www.googleapis.com/auth/drive.appdata"];
 
 export const googleRouter = new Elysia({ prefix: "/google" })
+  .use(requestLogger("google"))
   .resolve({ as: "scoped" }, ({ cookie: { session } }) => {
     return { userId: decodeJwt(session.value!).id as string };
   })

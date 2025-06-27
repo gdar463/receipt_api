@@ -18,3 +18,10 @@ export class PatchBodyNotFoundError extends Error {
     this.name = "PatchBodyNotFoundError";
   }
 }
+
+export class JWENotFoundError extends Error {
+  constructor() {
+    super("The JWE was not found in the db");
+    this.name = "JWENotFoundError";
+  }
+}
