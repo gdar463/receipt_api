@@ -91,7 +91,7 @@ export const itemHooks = new Elysia({ name: "itemHooks" })
             router: "item",
             error_id: code,
           });
-          return error;
+          return { error: error };
       }
     }
   );
