@@ -27,9 +27,12 @@ export const totalRouter = new Elysia({ tags: ["components"] })
       const compMap = createComponentMap(comps);
 
       if (compMap.total) {
-        // TODO: Update
+        comps[compMap.total.index].data = body;
       } else {
-        // TODO: Add
+        comps.push({
+          type: "total",
+          data: body,
+        });
       }
 
       await db
@@ -64,7 +67,7 @@ export const totalRouter = new Elysia({ tags: ["components"] })
         throw new ComponentNotFoundError();
       }
 
-      // TODO: Implement
+      comps.splice(compMap.total.index, 1);
 
       await db
         .update(receipts)
