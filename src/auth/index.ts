@@ -2,8 +2,10 @@ import Elysia, { t } from "elysia";
 import { signup } from "./signup";
 import { login } from "./login";
 import { authenticate, createSession } from "./jwt";
+import { requestLogger } from "@/request";
 
 export const authRouter = new Elysia({ prefix: "/auth" })
+  .use(requestLogger("auth"))
   .onError(({ code, error, set }) => {
     if (code === "VALIDATION") {
       set.status = 400;

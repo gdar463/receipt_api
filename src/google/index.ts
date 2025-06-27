@@ -9,26 +9,29 @@ import { encryptInfo } from "./token";
 const authClient = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URI,
+  process.env.GOOGLE_REDIRECT_URI
 );
 
 const scopes = ["openid", "https://www.googleapis.com/auth/drive.appdata"];
 
 export const googleRouter = new Elysia({ prefix: "/google" })
-  .get("/auth-url", () => {
+  .resolve({ as: "scoped" }, ({ cookie: { session } }) => {
+    return { userId: decodeJwt(session.value!).id as string };
+  })
+  .get("/auth-url", ({ userId }) => {
     return {
       url: authClient.generateAuthUrl({
         access_type: "offline",
         scope: scopes,
+        include_granted_scopes: true,
+        prompt: "consent",
+        state: userId,
       }),
     };
   })
-  .resolve(({ cookie: { session } }) => {
-    return { userId: decodeJwt(session.value!).id } as { userId: string };
-  })
   .get(
     "/callback",
-    async ({ query, userId, status }) => {
+    async ({ query, status }) => {
       const { tokens } = await authClient.getToken(query.code);
       if (!tokens.access_token) {
         return status(500, { error: "Google Failed" });
@@ -42,12 +45,13 @@ export const googleRouter = new Elysia({ prefix: "/google" })
             expires: new Date(tokens.expiry_date!),
           }),
         })
-        .where(eq(users.id, userId));
+        .where(eq(users.id, query.state));
       return status(200);
     },
     {
       query: t.Object({
         code: t.String(),
+        state: t.String(),
       }),
-    },
+    }
   );
