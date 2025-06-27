@@ -11,3 +11,10 @@ export class CountryNotFoundError extends Error {
     this.name = "CountryNotFoundError";
   }
 }
+
+export class GoogleError extends Error {
+  constructor() {
+    super("Google Failed");
+    this.name = "GoogleError";
+  }
+}

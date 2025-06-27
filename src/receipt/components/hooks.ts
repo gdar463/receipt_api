@@ -1,5 +1,9 @@
 import Elysia from "elysia";
-import { ComponentNotFoundError, CountryNotFoundError } from "./errors";
+import {
+  ComponentNotFoundError,
+  CountryNotFoundError,
+  GoogleError,
+} from "./errors";
 import { requestLogger } from "@/request";
 import { decodeJwt } from "jose";
 import { promoteHooks } from "@/util";
@@ -8,6 +12,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
   .error({
     ComponentNotFoundError,
     CountryNotFoundError,
+    GoogleError,
   })
   .use(requestLogger("components"))
   .resolve({ as: "scoped" }, ({ cookie: { session } }) => {
@@ -71,6 +76,14 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
           });
           set.status = 400;
           return { error: "Invalid country" };
+        case "GoogleError":
+          logger.error("errored_request", {
+            ...commonLog,
+            router: "components/google",
+            error_id: "GoogleError",
+          });
+          set.status = 500;
+          return { error: "Google Failed" };
         default:
           logger.error("errored_request", {
             ...commonLog,
