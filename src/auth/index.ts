@@ -6,12 +6,6 @@ import { requestLogger } from "@/request";
 
 export const authRouter = new Elysia({ prefix: "/auth" })
   .use(requestLogger("auth"))
-  .onError(({ code, error, set }) => {
-    if (code === "VALIDATION") {
-      set.status = 400;
-      return { error: error.message };
-    }
-  })
   .guard(
     {
       async beforeHandle({ cookie: { session }, status }) {
