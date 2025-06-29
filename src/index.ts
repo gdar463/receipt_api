@@ -12,7 +12,7 @@ import { test } from "./test";
 
 const port = process.env.PORT || 3000;
 
-let app = new Elysia()
+const app = new Elysia({ prefix: "api" })
   .onError(({ code, set, path, request: { method } }) => {
     switch (code) {
       case "NOT_FOUND":
@@ -84,12 +84,16 @@ let app = new Elysia()
   );
 // end protected section
 
+let server;
 if (process.env.NODE_ENV === "development") {
-  app = new Elysia().use(swagger()).use(app);
+  server = new Elysia().use(swagger()).use(app).listen(port);
+} else {
+  server = new Elysia().use(app).listen(port);
 }
-app.listen(port);
 
-if ((await app.handle(new Request(`http://localhost:${port}/test`))).ok) {
+if (
+  (await server.handle(new Request(`http://localhost:${port}/api/test`))).ok
+) {
   console.log(`running on localhost:${port}`);
 } else {
   console.error(`failed starting on port ${port}`);
