@@ -1,5 +1,7 @@
 # Receipts Tracker API
 
-in the future API for a receipt tracker
+For documentation set `NODE_ENV` env var to `development` and go to `{url}/swagger`
+
+Licensed under [GPL v3.0](LICENSE)
 
 made in [Bun](https://bun.sh)
