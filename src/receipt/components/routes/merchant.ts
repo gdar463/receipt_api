@@ -3,9 +3,8 @@ import { merchantComponent } from "../validation";
 import { decodeJwt } from "jose";
 import { receipts } from "@/db/schema";
 import db from "@/db";
-import { eq, and } from "drizzle-orm";
-import { ReceiptNotFoundError } from "@/receipt/errors";
-import { createComponentMap } from "../utils";
+import { eq } from "drizzle-orm";
+import { getComps } from "../utils";
 import { ComponentNotFoundError } from "../errors";
 import { now } from "@/util";
 
@@ -16,15 +15,7 @@ export const merchantRouter = new Elysia({ tags: ["components"] })
   .put(
     "/merchant",
     async ({ status, params: { id }, body, userId }) => {
-      const rows = await db
-        .select({ components: receipts.components })
-        .from(receipts)
-        .where(and(eq(receipts.userId, userId), eq(receipts.id, id)));
-      if (rows.length === 0) {
-        throw new ReceiptNotFoundError();
-      }
-      const comps = rows[0].components;
-      const compMap = createComponentMap(comps);
+      const { comps, compMap } = await getComps(id, userId);
 
       if (compMap.merchant) {
         comps[compMap.merchant.index].data = body;
@@ -54,15 +45,7 @@ export const merchantRouter = new Elysia({ tags: ["components"] })
   .delete(
     "/merchant",
     async ({ status, params: { id }, userId }) => {
-      const rows = await db
-        .select({ components: receipts.components })
-        .from(receipts)
-        .where(and(eq(receipts.userId, userId), eq(receipts.id, id)));
-      if (rows.length === 0) {
-        throw new ReceiptNotFoundError();
-      }
-      const comps = rows[0].components;
-      const compMap = createComponentMap(comps);
+      const { comps, compMap } = await getComps(id, userId);
       if (!compMap.merchant) {
         throw new ComponentNotFoundError();
       }

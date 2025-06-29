@@ -1,4 +1,8 @@
+import db from "@/db";
 import type { ComponentType, ReceiptComponent } from "./types";
+import { receipts } from "@/db/schema";
+import { and, eq } from "drizzle-orm";
+import { ReceiptNotFoundError } from "../errors";
 
 export function createComponentMap(
   components: ReceiptComponent[]
@@ -6,4 +10,17 @@ export function createComponentMap(
   return Object.fromEntries(
     components.map((c, i) => [c.type, { ...c, index: i }])
   );
+}
+
+export async function getComps(receiptId: string, userId: string) {
+  const rows = await db
+    .select({ components: receipts.components })
+    .from(receipts)
+    .where(and(eq(receipts.userId, userId), eq(receipts.id, receiptId)));
+  if (rows.length === 0) {
+    throw new ReceiptNotFoundError();
+  }
+  const comps = rows[0].components;
+  const compMap = createComponentMap(comps);
+  return { comps, compMap };
 }

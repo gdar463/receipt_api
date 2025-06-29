@@ -2,9 +2,8 @@ import Elysia, { t } from "elysia";
 import { decodeJwt } from "jose";
 import { receipts } from "@/db/schema";
 import db from "@/db";
-import { eq, and } from "drizzle-orm";
-import { ReceiptNotFoundError } from "@/receipt/errors";
-import { createComponentMap } from "../utils";
+import { eq } from "drizzle-orm";
+import { getComps } from "../utils";
 import { ComponentNotFoundError, GoogleError } from "../errors";
 import { now } from "@/util";
 import { createFile, deleteFile, getFileByID } from "@/google/drive";
@@ -17,15 +16,7 @@ export const scanRouter = new Elysia({ tags: ["components"] })
   .get(
     "/scan",
     async ({ params: { id }, userId }) => {
-      const rows = await db
-        .select({ components: receipts.components })
-        .from(receipts)
-        .where(and(eq(receipts.userId, userId), eq(receipts.id, id)));
-      if (rows.length === 0) {
-        throw new ReceiptNotFoundError();
-      }
-      const comps = rows[0].components;
-      const compMap = createComponentMap(comps);
+      const { comps: _, compMap } = await getComps(id, userId);
       if (!compMap.scan) {
         throw new ComponentNotFoundError();
       }
@@ -44,15 +35,7 @@ export const scanRouter = new Elysia({ tags: ["components"] })
   .put(
     "/scan",
     async ({ status, params: { id }, body, userId }) => {
-      const rows = await db
-        .select({ components: receipts.components })
-        .from(receipts)
-        .where(and(eq(receipts.userId, userId), eq(receipts.id, id)));
-      if (rows.length === 0) {
-        throw new ReceiptNotFoundError();
-      }
-      const comps = rows[0].components;
-      const compMap = createComponentMap(comps);
+      const { comps, compMap } = await getComps(id, userId);
 
       if (compMap.scan) {
         await deleteFile(compMap.scan.data.driveId, userId);
@@ -105,15 +88,7 @@ export const scanRouter = new Elysia({ tags: ["components"] })
   .delete(
     "/scan",
     async ({ status, params: { id }, userId }) => {
-      const rows = await db
-        .select({ components: receipts.components })
-        .from(receipts)
-        .where(and(eq(receipts.userId, userId), eq(receipts.id, id)));
-      if (rows.length === 0) {
-        throw new ReceiptNotFoundError();
-      }
-      const comps = rows[0].components;
-      const compMap = createComponentMap(comps);
+      const { comps, compMap } = await getComps(id, userId);
       if (!compMap.scan) {
         throw new ComponentNotFoundError();
       }
