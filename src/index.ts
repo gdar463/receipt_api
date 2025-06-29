@@ -1,3 +1,4 @@
+import { swagger } from "@elysiajs/swagger";
 import "dotenv/config";
 import Elysia from "elysia";
 
@@ -11,7 +12,7 @@ import { test } from "./test";
 
 const port = process.env.PORT || 3000;
 
-const app = new Elysia()
+let app = new Elysia()
   .onError(({ code, set, path, request: { method } }) => {
     switch (code) {
       case "NOT_FOUND":
@@ -80,9 +81,13 @@ const app = new Elysia()
       },
     },
     (app) => app.use(receiptRouter).use(googleRouter),
-  )
-  // end protected section
-  .listen(port);
+  );
+// end protected section
+
+if (process.env.NODE_ENV === "development") {
+  app = new Elysia().use(swagger()).use(app);
+}
+app.listen(port);
 
 if ((await app.handle(new Request(`http://localhost:${port}/test`))).ok) {
   console.log(`running on localhost:${port}`);
