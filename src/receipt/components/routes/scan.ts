@@ -63,7 +63,7 @@ export const scanRouter = new Elysia({ tags: ["components"] })
             orig_name: body.file.name,
           },
         },
-        userId
+        userId,
       );
       if (!driveId) {
         throw new GoogleError();
@@ -91,7 +91,7 @@ export const scanRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
-    }
+    },
   )
   .delete(
     "/scan",
@@ -125,5 +125,5 @@ export const scanRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
-    }
+    },
   );
