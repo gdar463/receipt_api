@@ -40,7 +40,7 @@ export const totalRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
-    }
+    },
   )
   .delete(
     "/total",
@@ -65,5 +65,5 @@ export const totalRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
-    }
+    },
   );

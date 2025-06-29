@@ -40,7 +40,7 @@ export const merchantRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
-    }
+    },
   )
   .delete(
     "/merchant",
@@ -65,5 +65,5 @@ export const merchantRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
-    }
+    },
   );

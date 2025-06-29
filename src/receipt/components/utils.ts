@@ -5,10 +5,10 @@ import { and, eq } from "drizzle-orm";
 import { ReceiptNotFoundError } from "../errors";
 
 export function createComponentMap(
-  components: ReceiptComponent[]
+  components: ReceiptComponent[],
 ): Partial<{ [K in ComponentType]: ReceiptComponent<K> & { index: number } }> {
   return Object.fromEntries(
-    components.map((c, i) => [c.type, { ...c, index: i }])
+    components.map((c, i) => [c.type, { ...c, index: i }]),
   );
 }
 

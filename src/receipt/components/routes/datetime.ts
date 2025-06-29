@@ -40,7 +40,7 @@ export const datetimeRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
-    }
+    },
   )
   .delete(
     "/datetime",
@@ -65,5 +65,5 @@ export const datetimeRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
-    }
+    },
   );

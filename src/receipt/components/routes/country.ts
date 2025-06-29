@@ -44,7 +44,7 @@ export const countryRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
-    }
+    },
   )
   .delete(
     "/country",
@@ -69,5 +69,5 @@ export const countryRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
-    }
+    },
   );
