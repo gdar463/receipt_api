@@ -7,12 +7,36 @@ import { ReceiptNotFoundError } from "@/receipt/errors";
 import { createComponentMap } from "../utils";
 import { ComponentNotFoundError, GoogleError } from "../errors";
 import { now } from "@/util";
-import { createFile, deleteFile } from "@/google/drive";
+import { createFile, deleteFile, getFileByID } from "@/google/drive";
 
 export const scanRouter = new Elysia({ tags: ["components"] })
   .resolve(({ cookie: { session } }) => {
     return { userId: decodeJwt(session.value!).id as string };
   })
+  .get(
+    "/scan",
+    async ({ params: { id }, userId }) => {
+      const rows = await db
+        .select({ components: receipts.components })
+        .from(receipts)
+        .where(and(eq(receipts.userId, userId), eq(receipts.id, id)));
+      if (rows.length === 0) {
+        throw new ReceiptNotFoundError();
+      }
+      const comps = rows[0].components;
+      const compMap = createComponentMap(comps);
+      if (!compMap.scan) {
+        throw new ComponentNotFoundError();
+      }
+      const file = await getFileByID(compMap.scan.data.driveId, userId);
+      return file;
+    },
+    {
+      params: t.Object({
+        id: t.String(),
+      }),
+    },
+  )
   .put(
     "/scan",
     async ({ status, params: { id }, body, userId }) => {
