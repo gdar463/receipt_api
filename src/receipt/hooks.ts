@@ -1,3 +1,4 @@
+import bearer from "@elysiajs/bearer";
 import { Elysia } from "elysia";
 import { decodeJwt } from "jose";
 
@@ -12,6 +13,7 @@ import {
 } from "./errors";
 
 const receiptHooks = new Elysia({ name: "receiptHooks" })
+  .use(bearer())
   .error({
     JWENotFoundError,
     PatchBodyNotFoundError,
@@ -19,8 +21,8 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
     NameAlreadyExistsError,
   })
   .use(requestLogger("receipt"))
-  .resolve({ as: "scoped" }, ({ cookie: { session } }) => {
-    return { userId: decodeJwt(session.value!).id as string };
+  .resolve({ as: "scoped" }, ({ bearer }) => {
+    return { userId: decodeJwt(bearer!).id as string };
   })
   .onError(
     { as: "scoped" },
