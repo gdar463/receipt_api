@@ -1,8 +1,9 @@
-import db from "@/db";
-
-import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import type { Cookie, StatusFunc } from "elysia";
+
+import db from "@/db";
+import { users } from "@/db/schema";
+
 import { createSession } from "./jwt";
 
 export async function login(

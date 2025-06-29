@@ -1,5 +1,5 @@
-import { AxiomJSTransport, ConsoleTransport, Logger } from "@axiomhq/logging";
 import { Axiom } from "@axiomhq/js";
+import { AxiomJSTransport, ConsoleTransport, Logger } from "@axiomhq/logging";
 
 const axiom = new Axiom({
   token: process.env.AXIOM_TOKEN!,
@@ -19,15 +19,17 @@ const axiomLogger =
         ],
       })
     : consoleVar === "2"
-    ? new Logger({ transports: [new ConsoleTransport({ prettyPrint: true })] })
-    : new Logger({
-        transports: [
-          new AxiomJSTransport({
-            axiom,
-            dataset: process.env.AXIOM_DATASET!,
-          }),
-        ],
-      });
+      ? new Logger({
+          transports: [new ConsoleTransport({ prettyPrint: true })],
+        })
+      : new Logger({
+          transports: [
+            new AxiomJSTransport({
+              axiom,
+              dataset: process.env.AXIOM_DATASET!,
+            }),
+          ],
+        });
 
 export const logger = {
   info: (message: string, meta?: object) => {

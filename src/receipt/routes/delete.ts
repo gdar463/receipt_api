@@ -1,12 +1,13 @@
-import db from "@/db";
-import { receipts } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import type { StatusFunc } from "elysia";
+
+import db from "@/db";
+import { receipts } from "@/db/schema";
 
 export async function deleteReceipt(
   status: StatusFunc,
   userId: string,
-  receiptId: string
+  receiptId: string,
 ) {
   const rows = await db
     .delete(receipts)

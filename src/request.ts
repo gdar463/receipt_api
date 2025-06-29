@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import { nanoid } from "nanoid";
+
 import { logger } from "./logger";
 
 export const requestDecor = new Elysia({ name: "requestDecor" }).derive(
@@ -9,7 +10,7 @@ export const requestDecor = new Elysia({ name: "requestDecor" }).derive(
       request_id: nanoid(),
       request_time: performance.now(),
     };
-  }
+  },
 );
 
 export const requestLogger = (router = "") =>
@@ -30,7 +31,7 @@ export const requestLogger = (router = "") =>
             headers["x-client-ip"] ||
             null,
         });
-      }
+      },
     )
     .onAfterResponse(
       { as: "scoped" },
@@ -60,5 +61,5 @@ export const requestLogger = (router = "") =>
               null,
           });
         }
-      }
+      },
     );

@@ -1,9 +1,10 @@
-import db from "@/db";
-import { users } from "@/db/schema";
 import { createSecretKey } from "crypto";
 import { eq } from "drizzle-orm";
 import { google } from "googleapis";
-import { compactDecrypt, CompactEncrypt } from "jose";
+import { CompactEncrypt, compactDecrypt } from "jose";
+
+import db from "@/db";
+import { users } from "@/db/schema";
 import { JWENotFoundError } from "@/receipt/errors";
 
 export type GoogleInfo = {
@@ -13,12 +14,12 @@ export type GoogleInfo = {
 };
 
 const secretKey = createSecretKey(
-  Buffer.from(process.env.GOOGLE_JWE_SECRET!, "base64")
+  Buffer.from(process.env.GOOGLE_JWE_SECRET!, "base64"),
 );
 
 export async function encryptInfo(info: GoogleInfo) {
   const jwe = await new CompactEncrypt(
-    new TextEncoder().encode(JSON.stringify(info))
+    new TextEncoder().encode(JSON.stringify(info)),
   )
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
     .encrypt(secretKey);
@@ -40,7 +41,7 @@ export async function getAuthClient(userId: string) {
   const authClient = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
-    process.env.GOOGLE_REDIRECT_URI
+    process.env.GOOGLE_REDIRECT_URI,
   );
   const jwe = await db
     .select({ googleInfo: users.googleInfo })

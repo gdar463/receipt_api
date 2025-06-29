@@ -1,10 +1,11 @@
 import Elysia, { t } from "elysia";
-import { submit } from "./routes/submit";
+
+import { componentsRouter } from "./components";
+import { receiptHooks } from "./hooks";
+import { deleteReceipt } from "./routes/delete";
 import { getReceipt } from "./routes/get";
 import { listReceipts } from "./routes/list";
-import { deleteReceipt } from "./routes/delete";
-import { receiptHooks } from "./hooks";
-import { componentsRouter } from "./components";
+import { submit } from "./routes/submit";
 
 export const receiptRouter = new Elysia({ prefix: "/receipt" })
   .use(componentsRouter)
@@ -16,7 +17,7 @@ export const receiptRouter = new Elysia({ prefix: "/receipt" })
       body: t.Object({
         name: t.String(),
       }),
-    }
+    },
   )
   .get("/", async ({ userId }) => await listReceipts(userId))
   .get(
@@ -30,7 +31,7 @@ export const receiptRouter = new Elysia({ prefix: "/receipt" })
       query: t.Object({
         map: t.Optional(t.Number()),
       }),
-    }
+    },
   )
   .delete(
     "/:id",
@@ -40,5 +41,5 @@ export const receiptRouter = new Elysia({ prefix: "/receipt" })
       params: t.Object({
         id: t.String(),
       }),
-    }
+    },
   );

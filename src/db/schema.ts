@@ -1,6 +1,7 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { relations, sql } from "drizzle-orm";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
+
 import type { ReceiptComponent } from "@/receipt/components/types";
 
 export const users = sqliteTable("users", {

@@ -1,8 +1,11 @@
-import db from "@/db";
-import type { ComponentType, ReceiptComponent } from "./types";
-import { receipts } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
+
+import db from "@/db";
+import { receipts } from "@/db/schema";
+
 import { ReceiptNotFoundError } from "../errors";
+
+import type { ComponentType, ReceiptComponent } from "./types";
 
 export function createComponentMap(
   components: ReceiptComponent[],

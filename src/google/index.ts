@@ -1,16 +1,18 @@
-import db from "@/db";
-import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import Elysia, { t } from "elysia";
 import { google } from "googleapis";
 import { decodeJwt } from "jose";
-import { encryptInfo } from "./token";
+
+import db from "@/db";
+import { users } from "@/db/schema";
 import { requestLogger } from "@/request";
+
+import { encryptInfo } from "./token";
 
 const authClient = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URI
+  process.env.GOOGLE_REDIRECT_URI,
 );
 
 const scopes = ["openid", "https://www.googleapis.com/auth/drive.appdata"];
@@ -55,5 +57,5 @@ export const googleRouter = new Elysia({ prefix: "/google" })
         code: t.String(),
         state: t.String(),
       }),
-    }
+    },
   );

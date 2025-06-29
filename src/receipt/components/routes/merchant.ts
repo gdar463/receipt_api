@@ -1,12 +1,14 @@
-import Elysia, { t } from "elysia";
-import { merchantComponent } from "../validation";
-import { decodeJwt } from "jose";
-import { receipts } from "@/db/schema";
-import db from "@/db";
 import { eq } from "drizzle-orm";
-import { getComps } from "../utils";
-import { ComponentNotFoundError } from "../errors";
+import Elysia, { t } from "elysia";
+import { decodeJwt } from "jose";
+
+import db from "@/db";
+import { receipts } from "@/db/schema";
 import { now } from "@/util";
+
+import { ComponentNotFoundError } from "../errors";
+import { getComps } from "../utils";
+import { merchantComponent } from "../validation";
 
 export const merchantRouter = new Elysia({ tags: ["components"] })
   .resolve(({ cookie: { session } }) => {

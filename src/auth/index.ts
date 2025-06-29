@@ -1,8 +1,10 @@
 import Elysia, { t } from "elysia";
-import { signup } from "./signup";
-import { login } from "./login";
-import { authenticate, createSession } from "./jwt";
+
 import { requestLogger } from "@/request";
+
+import { authenticate, createSession } from "./jwt";
+import { login } from "./login";
+import { signup } from "./signup";
 
 export const authRouter = new Elysia({ prefix: "/auth" })
   .use(requestLogger("auth"))
@@ -30,11 +32,11 @@ export const authRouter = new Elysia({ prefix: "/auth" })
         .post(
           "/signup",
           async ({ body, cookie: { session }, status }) =>
-            await signup(body, session, status)
+            await signup(body, session, status),
         )
         .post(
           "/login",
           async ({ body, cookie: { session }, status }) =>
-            await login(body, session, status)
-        )
+            await login(body, session, status),
+        ),
   );

@@ -1,15 +1,16 @@
+import { eq } from "drizzle-orm";
 import { type StatusFunc } from "elysia";
 import { nanoid } from "nanoid";
+
 import db from "@/db";
 import { receipts } from "@/db/schema";
 import { NameAlreadyExistsError } from "@/receipt/errors";
-import { eq } from "drizzle-orm";
 import { now } from "@/util";
 
 export async function submit(
   status: StatusFunc,
   userId: string,
-  body: { name: string }
+  body: { name: string },
 ) {
   const id = nanoid(32);
   const count = await db.$count(receipts, eq(receipts.name, body.name));

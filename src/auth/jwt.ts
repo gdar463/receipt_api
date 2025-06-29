@@ -1,4 +1,4 @@
-import { jwtVerify, SignJWT, type JWTVerifyResult } from "jose";
+import { type JWTVerifyResult, SignJWT, jwtVerify } from "jose";
 import {
   JWSInvalid,
   JWSSignatureVerificationFailed,

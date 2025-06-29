@@ -1,4 +1,5 @@
 import { t } from "elysia";
+
 import type { ComponentType, ReceiptComponent } from "./components/types";
 import { allComponents } from "./components/validation";
 
@@ -24,7 +25,7 @@ export const receiptSchema = t.Object({
 
 export const componentMap = t.Record(
   t.String(),
-  t.Composite([allComponents, t.Object({ index: t.Number() })])
+  t.Composite([allComponents, t.Object({ index: t.Number() })]),
 );
 
 export const receiptDBSchema = t.Composite([

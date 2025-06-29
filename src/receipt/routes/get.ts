@@ -1,14 +1,16 @@
+import { and, eq } from "drizzle-orm";
+
 import db from "@/db";
 import { receipts } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
 import { ReceiptNotFoundError } from "@/receipt/errors";
-import type { ReceiptDB } from "../types";
+
 import { createComponentMap } from "../components/utils";
+import type { ReceiptDB } from "../types";
 
 export async function getReceipt(
   userId: string,
   receiptId: string,
-  map: number | undefined
+  map: number | undefined,
 ) {
   const rows = await db
     .select({

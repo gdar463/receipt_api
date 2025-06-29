@@ -1,12 +1,14 @@
 import Elysia from "elysia";
+import { decodeJwt } from "jose";
+
+import { requestLogger } from "@/request";
+import { promoteHooks } from "@/util";
+
 import {
   ComponentNotFoundError,
   CountryNotFoundError,
   GoogleError,
 } from "./errors";
-import { requestLogger } from "@/request";
-import { decodeJwt } from "jose";
-import { promoteHooks } from "@/util";
 
 const componentsHooks = new Elysia({ name: "componentsHooks" })
   .error({
@@ -93,7 +95,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
           });
           return { error: error };
       }
-    }
+    },
   );
 
 promoteHooks(componentsHooks.event);

@@ -1,13 +1,15 @@
 import { Elysia } from "elysia";
 import { decodeJwt } from "jose";
+
 import { requestLogger } from "@/request";
+import { promoteHooks } from "@/util";
+
 import {
   JWENotFoundError,
   NameAlreadyExistsError,
   PatchBodyNotFoundError,
   ReceiptNotFoundError,
 } from "./errors";
-import { promoteHooks } from "@/util";
 
 const receiptHooks = new Elysia({ name: "receiptHooks" })
   .error({
@@ -103,7 +105,7 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
           });
           return { error: error };
       }
-    }
+    },
   );
 promoteHooks(receiptHooks.event);
 export { receiptHooks };

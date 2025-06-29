@@ -1,10 +1,12 @@
+import Elysia from "elysia";
+
 import { authRouter } from "@/auth";
 import { receiptRouter } from "@/receipt";
-import { test } from "./test";
-import Elysia from "elysia";
-import { googleRouter } from "./google";
+
 import { authenticate } from "./auth/jwt";
+import { googleRouter } from "./google";
 import { logger } from "./logger";
+import { test } from "./test";
 
 const port = process.env.PORT || 3000;
 
@@ -76,7 +78,7 @@ const app = new Elysia()
         }
       },
     },
-    (app) => app.use(receiptRouter).use(googleRouter)
+    (app) => app.use(receiptRouter).use(googleRouter),
   )
   // end protected section
   .listen(port);
