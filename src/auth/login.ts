@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import type { Cookie, HTTPHeaders, StatusFunc } from "elysia";
+import type { HTTPHeaders, StatusFunc } from "elysia";
 
 import db from "@/db";
 import { users } from "@/db/schema";
