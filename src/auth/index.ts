@@ -1,3 +1,4 @@
+import bearer from "@elysiajs/bearer";
 import Elysia, { t } from "elysia";
 
 import { requestLogger } from "@/request";
@@ -7,17 +8,15 @@ import { login } from "./login";
 import { signup } from "./signup";
 
 export const authRouter = new Elysia({ prefix: "/auth" })
+  .use(bearer())
   .use(requestLogger("auth"))
   .guard(
     {
-      async beforeHandle({ cookie: { session }, status }) {
-        if (session.value != null) {
-          const auth = await authenticate(session.value);
+      async beforeHandle({ bearer, set: { headers }, status }) {
+        if (bearer != null) {
+          const auth = await authenticate(bearer);
           if (auth != false) {
-            session.set({
-              value: await createSession(auth.payload.id),
-              path: "/",
-            });
+            headers.authorization = `Bearer ${await createSession(auth.payload.id)}`;
             return status(200);
           }
         }
@@ -31,12 +30,12 @@ export const authRouter = new Elysia({ prefix: "/auth" })
       app
         .post(
           "/signup",
-          async ({ body, cookie: { session }, status }) =>
-            await signup(body, session, status),
+          async ({ body, set: { headers }, status }) =>
+            await signup(body, headers, status),
         )
         .post(
           "/login",
-          async ({ body, cookie: { session }, status }) =>
-            await login(body, session, status),
+          async ({ body, set: { headers }, status }) =>
+            await login(body, headers, status),
         ),
   );

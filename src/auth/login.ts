@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import type { Cookie, StatusFunc } from "elysia";
+import type { Cookie, HTTPHeaders, StatusFunc } from "elysia";
 
 import db from "@/db";
 import { users } from "@/db/schema";
@@ -8,7 +8,7 @@ import { createSession } from "./jwt";
 
 export async function login(
   body: { username: string; password: string },
-  session: Cookie<string | undefined>,
+  headers: HTTPHeaders,
   status: StatusFunc,
 ) {
   const user = await db
@@ -23,6 +23,6 @@ export async function login(
     return status(401, { error: "Invalid username or password" });
   }
   const jwt = await createSession(user[0].id);
-  session.set({ value: jwt, path: "/" });
+  headers.authorization = `Bearer ${jwt}`;
   return status(200);
 }

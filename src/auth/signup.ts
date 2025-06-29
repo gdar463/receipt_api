@@ -1,4 +1,4 @@
-import type { Cookie, StatusFunc } from "elysia";
+import type { HTTPHeaders, StatusFunc } from "elysia";
 
 import db from "@/db";
 import { users } from "@/db/schema";
@@ -7,7 +7,7 @@ import { createSession } from "./jwt";
 
 export async function signup(
   body: { username: string; password: string },
-  session: Cookie<string | undefined>,
+  headers: HTTPHeaders,
   status: StatusFunc,
 ) {
   const ids = await db
@@ -23,10 +23,6 @@ export async function signup(
   }
   const id = ids[0].id;
   const jwt = await createSession(id);
-  session.set({
-    value: jwt,
-    path: "/",
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-  });
+  headers.authorization = `Bearer ${jwt}`;
   return status(200);
 }

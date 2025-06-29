@@ -1,3 +1,4 @@
+import { bearer } from "@elysiajs/bearer";
 import { swagger } from "@elysiajs/swagger";
 import "dotenv/config";
 import Elysia from "elysia";
@@ -13,6 +14,7 @@ import { test } from "./test";
 const port = process.env.PORT || 3000;
 
 const app = new Elysia({ prefix: "api" })
+  .use(bearer())
   .onError(({ code, set, path, request: { method } }) => {
     switch (code) {
       case "NOT_FOUND":
@@ -42,10 +44,10 @@ const app = new Elysia({ prefix: "api" })
         route,
         request: { method },
         set: { headers },
-        cookie: { session },
+        bearer,
         status,
       }) {
-        if (session.value == null) {
+        if (bearer == null) {
           logger.warn("authentication_failed", {
             path: route,
             method,
@@ -61,7 +63,7 @@ const app = new Elysia({ prefix: "api" })
           });
           return status(401, { error: "Not Logged In" });
         }
-        const auth = await authenticate(session.value);
+        const auth = await authenticate(bearer);
         if (auth === false) {
           logger.warn("authentication_failed", {
             path: route,

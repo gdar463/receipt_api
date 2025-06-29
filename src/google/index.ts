@@ -1,3 +1,4 @@
+import bearer from "@elysiajs/bearer";
 import { eq } from "drizzle-orm";
 import Elysia, { t } from "elysia";
 import { google } from "googleapis";
@@ -18,9 +19,10 @@ const authClient = new google.auth.OAuth2(
 const scopes = ["openid", "https://www.googleapis.com/auth/drive.appdata"];
 
 export const googleRouter = new Elysia({ prefix: "/google" })
+  .use(bearer())
   .use(requestLogger("google"))
-  .resolve({ as: "scoped" }, ({ cookie: { session } }) => {
-    return { userId: decodeJwt(session.value!).id as string };
+  .resolve({ as: "scoped" }, ({ bearer }) => {
+    return { userId: decodeJwt(bearer!).id as string };
   })
   .get("/auth-url", ({ userId }) => {
     return {

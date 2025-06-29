@@ -1,3 +1,4 @@
+import bearer from "@elysiajs/bearer";
 import Elysia from "elysia";
 import { decodeJwt } from "jose";
 
@@ -11,14 +12,15 @@ import {
 } from "./errors";
 
 const componentsHooks = new Elysia({ name: "componentsHooks" })
+  .use(bearer())
   .error({
     ComponentNotFoundError,
     CountryNotFoundError,
     GoogleError,
   })
   .use(requestLogger("components"))
-  .resolve({ as: "scoped" }, ({ cookie: { session } }) => {
-    return { userId: decodeJwt(session.value!).id as string };
+  .resolve({ as: "scoped" }, ({ bearer }) => {
+    return { userId: decodeJwt(bearer!).id as string };
   })
   .onError(
     ({
