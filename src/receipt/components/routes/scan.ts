@@ -8,6 +8,7 @@ import { createComponentMap } from "../utils";
 import { ComponentNotFoundError, GoogleError } from "../errors";
 import { now } from "@/util";
 import { createFile, deleteFile, getFileByID } from "@/google/drive";
+import sharp from "sharp";
 
 export const scanRouter = new Elysia({ tags: ["components"] })
   .resolve(({ cookie: { session } }) => {
@@ -71,10 +72,15 @@ export const scanRouter = new Elysia({ tags: ["components"] })
       if (!driveId) {
         throw new GoogleError();
       }
+      const thumbnail = await sharp(await body.file.arrayBuffer())
+        .resize(200, 200, { fit: "inside" })
+        .webp()
+        .toBuffer();
       comps.push({
         type: "scan",
         data: {
           driveId,
+          thumbnail: `data:image/webp;base64,${thumbnail.toString("base64")}`,
         },
       });
 
