@@ -29,6 +29,9 @@ export const scanRouter = new Elysia({ tags: ["components"] })
         throw new ComponentNotFoundError();
       }
       const file = await getFileByID(compMap.scan.data.driveId, userId);
+      if (!file) {
+        throw new GoogleError();
+      }
       return file;
     },
     {
