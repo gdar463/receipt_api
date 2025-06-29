@@ -10,6 +10,7 @@ import { submit } from "./routes/submit";
 export const receiptRouter = new Elysia({ prefix: "/receipt" })
   .use(componentsRouter)
   .use(receiptHooks)
+  .get("/", async ({ userId }) => await listReceipts(userId))
   .post(
     "/",
     async ({ status, userId, body }) => await submit(status, userId, body),
@@ -19,7 +20,6 @@ export const receiptRouter = new Elysia({ prefix: "/receipt" })
       }),
     },
   )
-  .get("/", async ({ userId }) => await listReceipts(userId))
   .get(
     "/:id",
     async ({ userId, params: { id }, query: { map } }) =>
