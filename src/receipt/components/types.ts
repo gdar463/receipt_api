@@ -11,6 +11,7 @@ export type ComponentDataType = {
   };
   scan: {
     driveId: string;
+    thumbnail?: string;
   };
   merchant: {
     name: string;
