@@ -2,23 +2,16 @@ import bearer from "@elysiajs/bearer";
 import { Elysia } from "elysia";
 import { decodeJwt } from "jose";
 
+import { GoogleError } from "@/receipt/components/errors";
 import { requestLogger } from "@/request";
 import { promoteHooks } from "@/util";
 
-import {
-  JWENotFoundError,
-  NameAlreadyExistsError,
-  ReceiptNotFoundError,
-} from "./errors";
-
-const receiptHooks = new Elysia({ name: "receiptHooks" })
+const googleHooks = new Elysia({ name: "googleHooks" })
   .use(bearer())
   .error({
-    JWENotFoundError,
-    ReceiptNotFoundError,
-    NameAlreadyExistsError,
+    GoogleError,
   })
-  .use(requestLogger("receipt"))
+  .use(requestLogger("google"))
   .resolve({ as: "scoped" }, ({ bearer }) => {
     return { userId: decodeJwt(bearer!).id as string };
   })
@@ -60,47 +53,28 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
         case "VALIDATION":
           logger.error("errored_request", {
             ...commonLog,
-            router: "receipt",
+            router: "google",
             error_id: "VALIDATION",
           });
           set.status = 400;
           return { error: "Invalid request", code: "ValidationFailed" };
-        case "JWENotFoundError":
+        case "GoogleError":
           logger.error("errored_request", {
             ...commonLog,
             router: "google",
-            error_id: "JWENotFoundError",
+            error_id: "GoogleError",
           });
-          set.status = 401;
-          return {
-            error: "Google not connected to account",
-            code: "NoGoogleLinked",
-          };
-        case "ReceiptNotFoundError":
-          logger.error("errored_request", {
-            ...commonLog,
-            router: "receipt",
-            error_id: "ReceiptNotFoundError",
-          });
-          set.status = 404;
-          return { error: "Receipt Not Found", code: "ReceiptNotFound" };
-        case "NameAlreadyExistsError":
-          logger.error("errored_request", {
-            ...commonLog,
-            router: "receipt",
-            error_id: "NameAlreadyExistsError",
-          });
-          set.status = 409;
-          return { error: "Name already exists", code: "NameAlreadyExists" };
+          set.status = 500;
+          return { error: "Google Failed", code: "GoogleError" };
         default:
           logger.error("errored_request", {
             ...commonLog,
-            router: "receipt",
+            router: "google",
             error_id: code,
           });
           return { error: error, code };
       }
     },
   );
-promoteHooks(receiptHooks.event);
-export { receiptHooks };
+promoteHooks(googleHooks.event);
+export { googleHooks };

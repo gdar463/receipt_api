@@ -10,7 +10,7 @@ import { ComponentNotFoundError } from "../errors";
 import { getComps } from "../utils";
 import { datetimeComponent } from "../validation";
 
-export const datetimeRouter = new Elysia({ tags: ["components"] })
+export const datetimeRouter = new Elysia()
   .resolve(({ cookie: { session } }) => {
     return { userId: decodeJwt(session.value!).id as string };
   })

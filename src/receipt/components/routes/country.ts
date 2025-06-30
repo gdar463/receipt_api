@@ -7,11 +7,15 @@ import db from "@/db";
 import { receipts } from "@/db/schema";
 import { now } from "@/util";
 
+import {
+  deleteCountryComponentDetail,
+  putCountryComponentDetail,
+} from "../docs";
 import { ComponentNotFoundError, CountryNotFoundError } from "../errors";
 import { getComps } from "../utils";
 import { countryComponent } from "../validation";
 
-export const countryRouter = new Elysia({ tags: ["components"] })
+export const countryRouter = new Elysia()
   .resolve(({ cookie: { session } }) => {
     return { userId: decodeJwt(session.value!).id as string };
   })
@@ -44,8 +48,9 @@ export const countryRouter = new Elysia({ tags: ["components"] })
     {
       body: countryComponent.properties.data,
       params: t.Object({
-        id: t.String(),
+        id: t.String({ description: "Receipt's ID" }),
       }),
+      detail: putCountryComponentDetail,
     },
   )
   .delete(
@@ -71,5 +76,6 @@ export const countryRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
+      detail: deleteCountryComponentDetail,
     },
   );

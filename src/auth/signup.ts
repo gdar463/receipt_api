@@ -1,4 +1,4 @@
-import type { HTTPHeaders, StatusFunc } from "elysia";
+import type { StatusFunc } from "elysia";
 
 import db from "@/db";
 import { users } from "@/db/schema";
@@ -7,7 +7,6 @@ import { createSession } from "./jwt";
 
 export async function signup(
   body: { username: string; password: string },
-  headers: HTTPHeaders,
   status: StatusFunc,
 ) {
   const ids = await db
@@ -19,10 +18,12 @@ export async function signup(
     .onConflictDoNothing({ target: users.username })
     .returning({ id: users.id });
   if (ids.length == 0) {
-    return status(409, { error: "Username already exists" });
+    return status(409, {
+      error: "Username already exists",
+      code: "UsernameAlreadyExists",
+    });
   }
   const id = ids[0].id;
   const jwt = await createSession(id);
-  headers.authorization = `Bearer ${jwt}`;
-  return status(200);
+  return status(200, { token: jwt });
 }

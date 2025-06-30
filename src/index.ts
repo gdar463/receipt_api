@@ -9,11 +9,12 @@ import { receiptRouter } from "@/receipt";
 import { authenticate } from "./auth/jwt";
 import { googleRouter } from "./google";
 import { logger } from "./logger";
+import { swaggerConfig } from "./swagger";
 import { test } from "./test";
 
 const port = process.env.PORT || 3000;
 
-const app = new Elysia({ prefix: "api" })
+const app = new Elysia({ prefix: "/api" })
   .use(bearer())
   .onError(({ code, set, path, request: { method } }) => {
     switch (code) {
@@ -29,7 +30,7 @@ const app = new Elysia({ prefix: "api" })
             null,
         });
         set.status = 404;
-        return { error: "Not Found" };
+        return { error: "Not Found", code: "PageNotFound" };
     }
   })
   .get("/test", async () => await test())
@@ -61,7 +62,10 @@ const app = new Elysia({ prefix: "api" })
               headers["x-client-ip"] ||
               null,
           });
-          return status(401, { error: "Not Logged In" });
+          return status(401, {
+            error: "Not Logged In",
+            code: "Unauthenticated",
+          });
         }
         const auth = await authenticate(bearer);
         if (auth === false) {
@@ -78,8 +82,11 @@ const app = new Elysia({ prefix: "api" })
               headers["x-client-ip"] ||
               null,
           });
-          return status(403, { error: "Invalid Token" });
+          return status(403, { error: "Invalid Token", code: "InvalidToken" });
         }
+      },
+      detail: {
+        security: [{ bearerAuth: [] }],
       },
     },
     (app) => app.use(receiptRouter).use(googleRouter),
@@ -88,10 +95,17 @@ const app = new Elysia({ prefix: "api" })
 
 let server;
 if (process.env.NODE_ENV === "development") {
-  server = new Elysia().use(swagger()).use(app).listen(port);
+  // sometimes ts_ls gives some stupid error that doesn't make sense
+  // found a quick solution :)
+  // @ts-ignore
+  server = new Elysia().use(swagger(swaggerConfig)).use(app).listen(port);
 } else {
   server = new Elysia().use(app).listen(port);
 }
+
+process.on("exit", async () => {
+  await logger.flush();
+});
 
 if (
   (await server.handle(new Request(`http://localhost:${port}/api/test`))).ok

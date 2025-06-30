@@ -11,7 +11,7 @@ export const scanComponent = t.Object({
   type: t.Literal("scan"),
   data: t.Object({
     driveId: t.String(),
-    thumbnail: t.Optional(t.String()),
+    thumbnail: t.String(),
   }),
 });
 

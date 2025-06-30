@@ -8,10 +8,11 @@ import { receipts } from "@/db/schema";
 import { createFile, deleteFile, getFileByID } from "@/google/drive";
 import { now } from "@/util";
 
+import { getScanComponentDetail } from "../docs";
 import { ComponentNotFoundError, GoogleError } from "../errors";
 import { getComps } from "../utils";
 
-export const scanRouter = new Elysia({ tags: ["components"] })
+export const scanRouter = new Elysia()
   .resolve(({ cookie: { session } }) => {
     return { userId: decodeJwt(session.value!).id as string };
   })
@@ -32,6 +33,7 @@ export const scanRouter = new Elysia({ tags: ["components"] })
       params: t.Object({
         id: t.String(),
       }),
+      detail: getScanComponentDetail,
     },
   )
   .put(

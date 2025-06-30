@@ -1,3 +1,4 @@
+import cc from "currency-codes";
 import { eq } from "drizzle-orm";
 import Elysia, { t } from "elysia";
 import { decodeJwt } from "jose";
@@ -6,17 +7,20 @@ import db from "@/db";
 import { receipts } from "@/db/schema";
 import { now } from "@/util";
 
-import { ComponentNotFoundError } from "../errors";
+import { ComponentNotFoundError, CurrencyNotFoundError } from "../errors";
 import { getComps } from "../utils";
 import { totalComponent } from "../validation";
 
-export const totalRouter = new Elysia({ tags: ["components"] })
+export const totalRouter = new Elysia()
   .resolve(({ cookie: { session } }) => {
     return { userId: decodeJwt(session.value!).id as string };
   })
   .put(
     "/total",
     async ({ status, params: { id }, body, userId }) => {
+      if (!cc.codes().includes(body.currency)) {
+        throw new CurrencyNotFoundError();
+      }
       const { comps, compMap } = await getComps(id, userId);
 
       if (compMap.total) {

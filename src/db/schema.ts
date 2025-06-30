@@ -1,3 +1,4 @@
+import { customTimestamp } from ".";
 import { relations, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
@@ -22,16 +23,12 @@ export const usersRelations = relations(users, ({ many }) => ({
 
 export const receipts = sqliteTable("receipts", {
   id: text("id").primaryKey(),
-  name: text("name").notNull().unique(),
+  name: text("name").notNull(),
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .default(new Date(0))
-    .notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" })
-    .default(new Date(0))
-    .notNull(),
+  createdAt: customTimestamp("created_at").default(new Date(0)).notNull(),
+  updatedAt: customTimestamp("updated_at").default(new Date(0)).notNull(),
   components: text("components", { mode: "json" })
     .$type<ReceiptComponent[]>()
     .default([])

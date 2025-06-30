@@ -10,7 +10,7 @@ import { ComponentNotFoundError } from "../errors";
 import { getComps } from "../utils";
 import { merchantComponent } from "../validation";
 
-export const merchantRouter = new Elysia({ tags: ["components"] })
+export const merchantRouter = new Elysia()
   .resolve(({ cookie: { session } }) => {
     return { userId: decodeJwt(session.value!).id as string };
   })

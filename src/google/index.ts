@@ -2,12 +2,13 @@ import bearer from "@elysiajs/bearer";
 import { eq } from "drizzle-orm";
 import Elysia, { t } from "elysia";
 import { google } from "googleapis";
-import { decodeJwt } from "jose";
 
 import db from "@/db";
 import { users } from "@/db/schema";
-import { requestLogger } from "@/request";
+import { GoogleError } from "@/receipt/components/errors";
 
+import { getAuthUrlDetail, getCallbackDetail } from "./docs";
+import { googleHooks } from "./hooks";
 import { encryptInfo } from "./token";
 
 const authClient = new google.auth.OAuth2(
@@ -18,29 +19,35 @@ const authClient = new google.auth.OAuth2(
 
 const scopes = ["openid", "https://www.googleapis.com/auth/drive.appdata"];
 
-export const googleRouter = new Elysia({ prefix: "/google" })
+export const googleRouter = new Elysia({
+  prefix: "/google",
+  tags: ["Google"],
+})
   .use(bearer())
-  .use(requestLogger("google"))
-  .resolve({ as: "scoped" }, ({ bearer }) => {
-    return { userId: decodeJwt(bearer!).id as string };
-  })
-  .get("/auth-url", ({ userId }) => {
-    return {
-      url: authClient.generateAuthUrl({
-        access_type: "offline",
-        scope: scopes,
-        include_granted_scopes: true,
-        prompt: "consent",
-        state: userId,
-      }),
-    };
-  })
+  .use(googleHooks)
+  .get(
+    "/auth-url",
+    ({ userId }) => {
+      return {
+        url: authClient.generateAuthUrl({
+          access_type: "offline",
+          scope: scopes,
+          include_granted_scopes: true,
+          prompt: "consent",
+          state: userId,
+        }),
+      };
+    },
+    {
+      detail: getAuthUrlDetail,
+    },
+  )
   .get(
     "/callback",
     async ({ query, status }) => {
       const { tokens } = await authClient.getToken(query.code);
       if (!tokens.access_token) {
-        return status(500, { error: "Google Failed" });
+        throw new GoogleError();
       }
       await db
         .update(users)
@@ -52,12 +59,13 @@ export const googleRouter = new Elysia({ prefix: "/google" })
           }),
         })
         .where(eq(users.id, query.state));
-      return status(200);
+      return status(204);
     },
     {
       query: t.Object({
         code: t.String(),
         state: t.String(),
       }),
+      detail: getCallbackDetail,
     },
   );

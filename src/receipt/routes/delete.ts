@@ -9,11 +9,8 @@ export async function deleteReceipt(
   userId: string,
   receiptId: string,
 ) {
-  const rows = await db
+  await db
     .delete(receipts)
     .where(and(eq(receipts.userId, userId), eq(receipts.id, receiptId)));
-  if (rows.rowsAffected == 0) {
-    return status(500);
-  }
   return status(204);
 }

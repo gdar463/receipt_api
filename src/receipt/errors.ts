@@ -12,13 +12,6 @@ export class NameAlreadyExistsError extends Error {
   }
 }
 
-export class PatchBodyNotFoundError extends Error {
-  constructor() {
-    super("No Patch Body was Found");
-    this.name = "PatchBodyNotFoundError";
-  }
-}
-
 export class JWENotFoundError extends Error {
   constructor() {
     super("The JWE was not found in the db");

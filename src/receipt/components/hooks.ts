@@ -5,9 +5,12 @@ import { decodeJwt } from "jose";
 import { requestLogger } from "@/request";
 import { promoteHooks } from "@/util";
 
+import { JWENotFoundError } from "../errors";
+
 import {
   ComponentNotFoundError,
   CountryNotFoundError,
+  CurrencyNotFoundError,
   GoogleError,
 } from "./errors";
 
@@ -16,7 +19,9 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
   .error({
     ComponentNotFoundError,
     CountryNotFoundError,
+    CurrencyNotFoundError,
     GoogleError,
+    JWENotFoundError,
   })
   .use(requestLogger("components"))
   .resolve({ as: "scoped" }, ({ bearer }) => {
@@ -64,23 +69,34 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
           });
           if (process.env.NODE_ENV === "development") return error.message;
           set.status = 400;
-          return { error: "Invalid request" };
+          return { error: "Invalid request", code: "ValidationFailed" };
         case "ComponentNotFoundError":
           logger.error("errored_request", {
             ...commonLog,
             router: "components",
-            error_id: "JWENotFoundError",
+            error_id: "ComponentNotFoundError",
           });
           set.status = 404;
-          return { error: "Component Not Found" };
+          return {
+            error: "Component Not Found",
+            code: "ComponentNotFound",
+          };
         case "CountryNotFoundError":
-          logger.error("errored_request", {
+          logger.warn("errored_request", {
             ...commonLog,
             router: "components/country",
             error_id: "CountryNotFoundError",
           });
           set.status = 400;
-          return { error: "Invalid country" };
+          return { error: "Invalid country", code: "CountryNotFound" };
+        case "CurrencyNotFoundError":
+          logger.warn("errored_request", {
+            ...commonLog,
+            router: "components/total",
+            error_id: "CurrencyNotFoundError",
+          });
+          set.status = 400;
+          return { error: "Invalid currency", code: "CurrencyNotFound" };
         case "GoogleError":
           logger.error("errored_request", {
             ...commonLog,
@@ -88,14 +104,25 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
             error_id: "GoogleError",
           });
           set.status = 500;
-          return { error: "Google Failed" };
+          return { error: "Google Failed", code: "GoogleFailed" };
+        case "JWENotFoundError":
+          logger.error("errored_request", {
+            ...commonLog,
+            router: "google",
+            error_id: "JWENotFoundError",
+          });
+          set.status = 401;
+          return {
+            error: "Google not connected to account",
+            code: "NoGoogleLinked",
+          };
         default:
           logger.error("errored_request", {
             ...commonLog,
             router: "components",
             error_id: code,
           });
-          return { error: error };
+          return { error: error, code };
       }
     },
   );
