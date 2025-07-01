@@ -6,6 +6,10 @@ import db from "@/db";
 import { receipts } from "@/db/schema";
 import { now } from "@/util";
 
+import {
+  deleteDatetimeComponentDetail,
+  putDatetimeComponentDetail,
+} from "../docs";
 import { ComponentNotFoundError } from "../errors";
 import { getComps } from "../utils";
 import { datetimeComponent } from "../validation";
@@ -40,8 +44,9 @@ export const datetimeRouter = new Elysia()
     {
       body: datetimeComponent.properties.data,
       params: t.Object({
-        id: t.String(),
+        id: t.String({ description: "Receipt's ID" }),
       }),
+      detail: putDatetimeComponentDetail,
     },
   )
   .delete(
@@ -65,7 +70,8 @@ export const datetimeRouter = new Elysia()
     },
     {
       params: t.Object({
-        id: t.String(),
+        id: t.String({ description: "Receipt's ID" }),
       }),
+      detail: deleteDatetimeComponentDetail,
     },
   );

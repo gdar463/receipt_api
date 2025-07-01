@@ -6,6 +6,7 @@ import { requestLogger } from "@/request";
 import { promoteHooks } from "@/util";
 
 import {
+  FailedDeletionError,
   JWENotFoundError,
   NameAlreadyExistsError,
   ReceiptNotFoundError,
@@ -17,6 +18,7 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
     JWENotFoundError,
     ReceiptNotFoundError,
     NameAlreadyExistsError,
+    FailedDeletionError,
   })
   .use(requestLogger("receipt"))
   .resolve({ as: "scoped" }, ({ bearer }) => {
@@ -92,6 +94,17 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
           });
           set.status = 409;
           return { error: "Name already exists", code: "NameAlreadyExists" };
+        case "FailedDeletionError":
+          logger.error("errored_request", {
+            ...commonLog,
+            router: "receipt",
+            error_id: "FailedDeletionError",
+          });
+          set.status = 409;
+          return {
+            error: "Failed to delete. Receipt has components",
+            code: "FailedDeletion",
+          };
         default:
           logger.error("errored_request", {
             ...commonLog,

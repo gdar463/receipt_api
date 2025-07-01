@@ -7,6 +7,7 @@ import db from "@/db";
 import { receipts } from "@/db/schema";
 import { now } from "@/util";
 
+import { deleteTotalComponentDetail, putTotalComponentDetail } from "../docs";
 import { ComponentNotFoundError, CurrencyNotFoundError } from "../errors";
 import { getComps } from "../utils";
 import { totalComponent } from "../validation";
@@ -44,8 +45,9 @@ export const totalRouter = new Elysia()
     {
       body: totalComponent.properties.data,
       params: t.Object({
-        id: t.String(),
+        id: t.String({ description: "Receipt's ID" }),
       }),
+      detail: putTotalComponentDetail,
     },
   )
   .delete(
@@ -69,7 +71,8 @@ export const totalRouter = new Elysia()
     },
     {
       params: t.Object({
-        id: t.String(),
+        id: t.String({ description: "Reciept's ID" }),
       }),
+      detail: deleteTotalComponentDetail,
     },
   );

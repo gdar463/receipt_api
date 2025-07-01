@@ -11,6 +11,8 @@ export const users = sqliteTable("users", {
     .$defaultFn(() => nanoid(32)),
   username: text("username").unique().notNull(),
   password: text("password").notNull(),
+  displayName: text("display").notNull(),
+  email: text("email").notNull().unique(),
   googleInfo: text("google_info"),
   createdAt: integer({ mode: "timestamp" })
     .default(sql`(CURRENT_TIMESTAMP)`)

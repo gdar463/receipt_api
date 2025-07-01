@@ -3,17 +3,17 @@ import type { StatusFunc } from "elysia";
 import db from "@/db";
 import { users } from "@/db/schema";
 
-import { createSession } from "./jwt";
+import { createSession } from "../jwt";
+import type { SignupBody } from "../types";
 
-export async function signup(
-  body: { username: string; password: string },
-  status: StatusFunc,
-) {
+export async function signup(body: SignupBody, status: StatusFunc) {
   const ids = await db
     .insert(users)
     .values({
       username: body.username,
       password: await Bun.password.hash(body.password),
+      displayName: body.displayName,
+      email: body.email,
     })
     .onConflictDoNothing({ target: users.username })
     .returning({ id: users.id });

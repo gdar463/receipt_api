@@ -2,8 +2,12 @@ import { type JWTVerifyResult, SignJWT, jwtVerify } from "jose";
 import {
   JWSInvalid,
   JWSSignatureVerificationFailed,
+  JWTClaimValidationFailed,
   JWTExpired,
+  JWTInvalid,
 } from "jose/errors";
+
+import { now } from "@/util";
 
 const alg = "HS256";
 const key = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -21,7 +25,9 @@ export async function authenticate(jwt: string) {
   } catch (e) {
     if (
       e instanceof JWSSignatureVerificationFailed ||
+      JWTInvalid ||
       JWSInvalid ||
+      JWTClaimValidationFailed ||
       JWTExpired
     ) {
       return false;
@@ -35,6 +41,7 @@ export async function createSession(id: string) {
   return await new SignJWT({ id })
     .setProtectedHeader({ alg })
     .setIssuedAt()
+    .setNotBefore(now())
     .setIssuer("com.gdar463.receipts")
     .setExpirationTime("7d")
     .sign(key);

@@ -18,3 +18,10 @@ export class JWENotFoundError extends Error {
     this.name = "JWENotFoundError";
   }
 }
+
+export class FailedDeletionError extends Error {
+  constructor() {
+    super("Failed to delete");
+    this.name = "FailedDeletionError";
+  }
+}

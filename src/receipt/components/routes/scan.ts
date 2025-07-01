@@ -8,7 +8,11 @@ import { receipts } from "@/db/schema";
 import { createFile, deleteFile, getFileByID } from "@/google/drive";
 import { now } from "@/util";
 
-import { getScanComponentDetail } from "../docs";
+import {
+  deleteScanComponentDetail,
+  getScanComponentDetail,
+  putScanComponentDetail,
+} from "../docs";
 import { ComponentNotFoundError, GoogleError } from "../errors";
 import { getComps } from "../utils";
 
@@ -31,7 +35,7 @@ export const scanRouter = new Elysia()
     },
     {
       params: t.Object({
-        id: t.String(),
+        id: t.String({ description: "Receipt's ID" }),
       }),
       detail: getScanComponentDetail,
     },
@@ -81,12 +85,14 @@ export const scanRouter = new Elysia()
       return status(204);
     },
     {
+      parse: ["multipart/form-data"],
       body: t.Object({
-        file: t.File({ type: "image" }),
+        file: t.File({ type: "image", description: "Scanned receipt." }),
       }),
       params: t.Object({
-        id: t.String(),
+        id: t.String({ description: "Receipt's ID" }),
       }),
+      detail: putScanComponentDetail,
     },
   )
   .delete(
@@ -111,7 +117,8 @@ export const scanRouter = new Elysia()
     },
     {
       params: t.Object({
-        id: t.String(),
+        id: t.String({ description: "Receipt's ID" }),
       }),
+      detail: deleteScanComponentDetail,
     },
   );

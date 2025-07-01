@@ -1,19 +1,24 @@
-import bearer from "@elysiajs/bearer";
 import Elysia, { t } from "elysia";
 
-import { requestLogger } from "@/request";
-
-import { postLoginDetail, postSignupDetail } from "./docs";
+import {
+  getMeDetail,
+  postLoginDetail,
+  postRefreshDetail,
+  postSignupDetail,
+} from "./docs";
+import { InvalidTokenError } from "./errors";
+import { authHooks, protectedAuthHooks } from "./hooks";
 import { authenticate, createSession } from "./jwt";
-import { login } from "./login";
-import { signup } from "./signup";
+import { login } from "./routes/login";
+import { me } from "./routes/me";
+import { signup } from "./routes/signup";
+import { signupBodyValidation } from "./types";
 
 export const authRouter = new Elysia({
   prefix: "/auth",
   tags: ["Auth"],
 })
-  .use(bearer())
-  .use(requestLogger("auth"))
+  .use(authHooks)
   .guard(
     {
       async beforeHandle({ bearer, status }) {
@@ -42,11 +47,25 @@ export const authRouter = new Elysia({
           "/signup",
           async ({ body, status }) => await signup(body, status),
           {
-            body: t.Object({
-              username: t.String({ description: "Username for the new user." }),
-              password: t.String({ description: "Password for the new user." }),
-            }),
+            body: signupBodyValidation,
             detail: postSignupDetail,
+          },
+        )
+        .post(
+          "/refresh",
+          () => {
+            throw new InvalidTokenError();
+          },
+          {
+            detail: postRefreshDetail,
           },
         ),
   );
+
+export const protectedAuthRouter = new Elysia({
+  tags: ["Auth"],
+})
+  .use(protectedAuthHooks)
+  .get("/me", async ({ userId }) => await me(userId), {
+    detail: getMeDetail,
+  });

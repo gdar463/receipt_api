@@ -12,6 +12,7 @@ const config = {
   ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
+  quoteProps: "preserve",
 };
 
 export default config;

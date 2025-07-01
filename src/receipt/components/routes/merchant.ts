@@ -6,6 +6,10 @@ import db from "@/db";
 import { receipts } from "@/db/schema";
 import { now } from "@/util";
 
+import {
+  deleteMerchantComponentDetail,
+  putMerchantComponentDetail,
+} from "../docs";
 import { ComponentNotFoundError } from "../errors";
 import { getComps } from "../utils";
 import { merchantComponent } from "../validation";
@@ -40,8 +44,9 @@ export const merchantRouter = new Elysia()
     {
       body: merchantComponent.properties.data,
       params: t.Object({
-        id: t.String(),
+        id: t.String({ description: "Receipt's ID" }),
       }),
+      detail: putMerchantComponentDetail,
     },
   )
   .delete(
@@ -65,7 +70,8 @@ export const merchantRouter = new Elysia()
     },
     {
       params: t.Object({
-        id: t.String(),
+        id: t.String({ description: "Receipt's ID" }),
       }),
+      detail: deleteMerchantComponentDetail,
     },
   );

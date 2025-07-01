@@ -1,11 +1,11 @@
 import type { DocumentDecoration } from "elysia";
 
 export const getAuthUrlDetail: DocumentDecoration = {
-  summary: "Obtain OAuth2.0 URL",
-  description: `Returns the Google OAuth2.0 URL, for connect Google Drive to the currectly logged-in user.`,
+  summary: "Get OAuth2.0 URL",
+  description: `Gets the Google OAuth2.0 URL, for connecting Google Drive to the currectly logged-in user.`,
   responses: {
     200: {
-      description: "Obtained Auth URL.",
+      description: "OK.",
       content: {
         "application/json": {
           schema: {

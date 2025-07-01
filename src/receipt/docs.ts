@@ -5,7 +5,7 @@ export const getReceiptDetail: DocumentDecoration = {
   description: "Get a list of all receipts of the user.",
   responses: {
     200: {
-      description: "Obtained list successfully",
+      description: "OK.",
       content: {
         "application/json": {
           schema: {
@@ -41,7 +41,7 @@ export const postReceiptDetail: DocumentDecoration = {
   description: "Create a new receipt, given unique name.",
   responses: {
     200: {
-      description: "Created successfully.",
+      description: "OK.",
       content: {
         "application/json": {
           schema: {
@@ -60,7 +60,7 @@ export const postReceiptDetail: DocumentDecoration = {
       content: {
         "application/json": {
           schema: {
-            $ref: "#/components/schemas/error",
+            $ref: "#/components/schemas/NameAlreadyExists",
           },
         },
       },
@@ -75,7 +75,7 @@ export const getReceiptByIdDetail: DocumentDecoration = {
   by including the query parameter ${"`map`"} with value one.`,
   responses: {
     200: {
-      description: "Obtained successfully.",
+      description: "OK.",
       content: {
         "application/json": {
           schema: {
@@ -89,7 +89,7 @@ export const getReceiptByIdDetail: DocumentDecoration = {
       content: {
         "application/json": {
           schema: {
-            $ref: "#/components/schemas/error",
+            $ref: "#/components/schemas/ReceiptNotFound",
           },
         },
       },
@@ -102,7 +102,17 @@ export const deleteReceiptByIdDetail: DocumentDecoration = {
   description: "Delete a receipt, using its ID.",
   responses: {
     204: {
-      description: "Deleted successfully.",
+      $ref: "#/components/schemas/noContent",
+    },
+    409: {
+      description: "Failed to delete.",
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/FailedDeletion",
+          },
+        },
+      },
     },
   },
 };
