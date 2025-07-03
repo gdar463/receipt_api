@@ -2,6 +2,11 @@
 
 For documentation set `NODE_ENV` env var to `development` and go to `{url}/swagger`
 
-Licensed under [GPL v3.0](LICENSE)
+## Front-ends
 
-made in [Bun](https://bun.sh)
+For using this API, check out the following frontends:
+- [Webiste](https://github.com/gdar463/receipt_web)
+
+## License
+
+This project is licensed under [GPL v3.0](LICENSE)
