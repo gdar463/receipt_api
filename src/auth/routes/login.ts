@@ -14,7 +14,7 @@ export async function login(
   const user = await db
     .select({ hash: users.password, id: users.id })
     .from(users)
-    .where(eq(users.username, users.username));
+    .where(eq(users.username, body.username));
   if (user.length == 0) {
     throw new InvalidCredsError();
   }
