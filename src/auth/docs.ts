@@ -44,11 +44,11 @@ export const postSignupDetail: DocumentDecoration = {
       },
     },
     409: {
-      description: "Username already exists.",
+      description: "User already exists.",
       content: {
         "application/json": {
           schema: {
-            $ref: "#/components/schemas/UsernameAlreadyExists",
+            $ref: "#/components/schemas/UserAlreadyExists",
           },
         },
       },

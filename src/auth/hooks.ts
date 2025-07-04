@@ -8,8 +8,8 @@ import { promoteHooks } from "@/util";
 import {
   InvalidCredsError,
   InvalidTokenError,
+  UserAlreadyExistsError,
   UserDoesntExistError,
-  UsernameAlreadyExistsError,
 } from "./errors";
 
 const authHooks = new Elysia({ name: "authHooks" })
@@ -17,7 +17,7 @@ const authHooks = new Elysia({ name: "authHooks" })
   .error({
     InvalidCredsError,
     InvalidTokenError,
-    UsernameAlreadyExistsError,
+    UserAlreadyExistsError,
   })
   .use(requestLogger("auth"))
   .onError(
@@ -73,17 +73,17 @@ const authHooks = new Elysia({ name: "authHooks" })
           });
           set.status = 401;
           return { error: "Invalid token", code: "InvalidToken" };
-        case "UsernameAlreadyExistsError":
+        case "UserAlreadyExistsError":
           logger.warn("errored_request", {
             ...commonLog,
             status: 409,
             router: "auth",
-            error_id: "UsernameAlreadyExistsError",
+            error_id: "UserAlreadyExistsError",
           });
           set.status = 409;
           return {
-            error: "Username already exists",
-            code: "UsernameAlreadyExists",
+            error: "User already exists",
+            code: "UserAlreadyExists",
           };
         default:
           logger.error("errored_request", {

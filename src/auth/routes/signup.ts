@@ -3,6 +3,7 @@ import type { StatusFunc } from "elysia";
 import db from "@/db";
 import { users } from "@/db/schema";
 
+import { UserAlreadyExistsError } from "../errors";
 import { createSession } from "../jwt";
 import type { SignupBody } from "../types";
 
@@ -16,12 +17,10 @@ export async function signup(body: SignupBody, status: StatusFunc) {
       email: body.email,
     })
     .onConflictDoNothing({ target: users.username })
+    .onConflictDoNothing({ target: users.email })
     .returning({ id: users.id });
   if (ids.length == 0) {
-    return status(409, {
-      error: "Username already exists",
-      code: "UsernameAlreadyExists",
-    });
+    throw new UserAlreadyExistsError();
   }
   const id = ids[0].id;
   const jwt = await createSession(id);

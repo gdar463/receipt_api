@@ -367,22 +367,22 @@ export const swaggerConfig: ElysiaSwaggerConfig = {
             },
           },
         },
-        UsernameAlreadyExists: {
-          title: "UsernameAlreadyExistsError",
+        UserAlreadyExists: {
+          title: "UserAlreadyExistsError",
           type: "object",
           description:
-            "Thrown if trying to signup with an already existing username.",
+            "Thrown if trying to signup with an already existing username and/or email.",
           required: ["error", "code"],
           properties: {
             error: {
               type: "string",
               description: "Error Message.",
-              enum: ["Username already exists"],
+              enum: ["User already exists"],
             },
             code: {
               type: "string",
               description: "Error specific code.",
-              enum: ["UsernameAlreadyExists"],
+              enum: ["UserAlreadyExists"],
             },
           },
         },

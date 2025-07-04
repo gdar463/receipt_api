@@ -12,10 +12,10 @@ export class InvalidTokenError extends Error {
   }
 }
 
-export class UsernameAlreadyExistsError extends Error {
+export class UserAlreadyExistsError extends Error {
   constructor() {
-    super("Username already exists");
-    super.name = "UsernameAlreadyExistsError";
+    super("User already exists");
+    super.name = "UserAlreadyExistsError";
   }
 }
 
