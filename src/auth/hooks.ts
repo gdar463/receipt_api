@@ -36,7 +36,6 @@ const authHooks = new Elysia({ name: "authHooks" })
         path: route,
         method,
         request_id: request_id || null,
-        status: set.status,
         timing:
           request_time != undefined ? performance.now() - request_time : null,
         ip:
@@ -50,6 +49,7 @@ const authHooks = new Elysia({ name: "authHooks" })
         case "VALIDATION":
           logger.warn("errored_request", {
             ...commonLog,
+            status: 400,
             router: "auth",
             error_id: "VALIDATION",
           });
@@ -58,6 +58,7 @@ const authHooks = new Elysia({ name: "authHooks" })
         case "InvalidCredsError":
           logger.warn("errored_request", {
             ...commonLog,
+            status: 401,
             router: "auth",
             error_id: "InvalidCredsError",
           });
@@ -66,6 +67,7 @@ const authHooks = new Elysia({ name: "authHooks" })
         case "InvalidTokenError":
           logger.warn("errored_request", {
             ...commonLog,
+            status: 401,
             router: "auth",
             error_id: "InvalidTokenError",
           });
@@ -74,6 +76,7 @@ const authHooks = new Elysia({ name: "authHooks" })
         case "UsernameAlreadyExistsError":
           logger.warn("errored_request", {
             ...commonLog,
+            status: 409,
             router: "auth",
             error_id: "UsernameAlreadyExistsError",
           });
@@ -85,6 +88,7 @@ const authHooks = new Elysia({ name: "authHooks" })
         default:
           logger.error("errored_request", {
             ...commonLog,
+            status: set.status,
             router: "auth",
             error_id: code,
           });
