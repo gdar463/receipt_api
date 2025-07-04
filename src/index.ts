@@ -1,4 +1,5 @@
 import { bearer } from "@elysiajs/bearer";
+import { cors } from "@elysiajs/cors";
 import { swagger } from "@elysiajs/swagger";
 import "dotenv/config";
 import Elysia from "elysia";
@@ -15,6 +16,7 @@ import { test } from "./test";
 const port = process.env.PORT || 3000;
 
 const app = new Elysia({ prefix: "/api" })
+  .use(cors())
   .use(bearer())
   .onError(({ code, set, path, request: { method } }) => {
     switch (code) {
