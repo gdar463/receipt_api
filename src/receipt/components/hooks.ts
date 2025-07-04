@@ -43,7 +43,6 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
         path: route,
         method,
         request_id: request_id || null,
-        status: set.status,
         user_id:
           userId != undefined
             ? new Bun.CryptoHasher("sha256", process.env.USER_ID_HASH_KEY)
@@ -64,6 +63,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
         case "VALIDATION":
           logger.error("errored_request", {
             ...commonLog,
+            status: 400,
             router: "components",
             error_id: "VALIDATION",
           });
@@ -73,6 +73,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
         case "ComponentNotFoundError":
           logger.error("errored_request", {
             ...commonLog,
+            status: 404,
             router: "components",
             error_id: "ComponentNotFoundError",
           });
@@ -84,6 +85,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
         case "CountryNotFoundError":
           logger.warn("errored_request", {
             ...commonLog,
+            status: 400,
             router: "components/country",
             error_id: "CountryNotFoundError",
           });
@@ -92,6 +94,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
         case "CurrencyNotFoundError":
           logger.warn("errored_request", {
             ...commonLog,
+            status: 400,
             router: "components/total",
             error_id: "CurrencyNotFoundError",
           });
@@ -100,6 +103,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
         case "GoogleError":
           logger.error("errored_request", {
             ...commonLog,
+            status: 500,
             router: "components/google",
             error_id: "GoogleError",
           });
@@ -108,6 +112,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
         case "JWENotFoundError":
           logger.error("errored_request", {
             ...commonLog,
+            status: 401,
             router: "google",
             error_id: "JWENotFoundError",
           });
@@ -119,6 +124,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
         default:
           logger.error("errored_request", {
             ...commonLog,
+            status: set.status,
             router: "components",
             error_id: code,
           });

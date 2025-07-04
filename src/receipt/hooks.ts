@@ -41,7 +41,6 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
         path: route,
         method,
         request_id: request_id || null,
-        status: set.status,
         user_id:
           userId != undefined
             ? new Bun.CryptoHasher("sha256", process.env.USER_ID_HASH_KEY)
@@ -62,6 +61,7 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
         case "VALIDATION":
           logger.error("errored_request", {
             ...commonLog,
+            status: 400,
             router: "receipt",
             error_id: "VALIDATION",
           });
@@ -70,6 +70,7 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
         case "JWENotFoundError":
           logger.error("errored_request", {
             ...commonLog,
+            status: 401,
             router: "google",
             error_id: "JWENotFoundError",
           });
@@ -81,6 +82,7 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
         case "ReceiptNotFoundError":
           logger.error("errored_request", {
             ...commonLog,
+            status: 404,
             router: "receipt",
             error_id: "ReceiptNotFoundError",
           });
@@ -89,6 +91,7 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
         case "NameAlreadyExistsError":
           logger.error("errored_request", {
             ...commonLog,
+            status: 409,
             router: "receipt",
             error_id: "NameAlreadyExistsError",
           });
@@ -97,6 +100,7 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
         case "FailedDeletionError":
           logger.error("errored_request", {
             ...commonLog,
+            status: 409,
             router: "receipt",
             error_id: "FailedDeletionError",
           });
@@ -108,6 +112,7 @@ const receiptHooks = new Elysia({ name: "receiptHooks" })
         default:
           logger.error("errored_request", {
             ...commonLog,
+            status: set.status,
             router: "receipt",
             error_id: code,
           });

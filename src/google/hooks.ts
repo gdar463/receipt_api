@@ -32,7 +32,6 @@ const googleHooks = new Elysia({ name: "googleHooks" })
         path: route,
         method,
         request_id: request_id || null,
-        status: set.status,
         user_id:
           userId != undefined
             ? new Bun.CryptoHasher("sha256", process.env.USER_ID_HASH_KEY)
@@ -53,6 +52,7 @@ const googleHooks = new Elysia({ name: "googleHooks" })
         case "VALIDATION":
           logger.error("errored_request", {
             ...commonLog,
+            status: 400,
             router: "google",
             error_id: "VALIDATION",
           });
@@ -61,6 +61,7 @@ const googleHooks = new Elysia({ name: "googleHooks" })
         case "GoogleError":
           logger.error("errored_request", {
             ...commonLog,
+            status: 500,
             router: "google",
             error_id: "GoogleError",
           });
@@ -69,6 +70,7 @@ const googleHooks = new Elysia({ name: "googleHooks" })
         default:
           logger.error("errored_request", {
             ...commonLog,
+            status: set.status,
             router: "google",
             error_id: code,
           });

@@ -117,7 +117,6 @@ const protectedAuthHooks = new Elysia({ name: "protectedAuthHooks" })
         path: route,
         method,
         request_id: request_id || null,
-        status: set.status,
         timing:
           request_time != undefined ? performance.now() - request_time : null,
         ip:
@@ -131,6 +130,7 @@ const protectedAuthHooks = new Elysia({ name: "protectedAuthHooks" })
         case "VALIDATION":
           logger.warn("errored_request", {
             ...commonLog,
+            status: 400,
             router: "protectedAuth",
             error_id: "VALIDATION",
           });
@@ -139,6 +139,7 @@ const protectedAuthHooks = new Elysia({ name: "protectedAuthHooks" })
         case "UserDoesntExistError":
           logger.warn("errored_request", {
             ...commonLog,
+            status: 401,
             router: "protectedAuth",
             error_id: "InvalidTokenError",
           });
@@ -151,6 +152,7 @@ const protectedAuthHooks = new Elysia({ name: "protectedAuthHooks" })
         default:
           logger.error("errored_request", {
             ...commonLog,
+            status: set.status,
             router: "protectedAuth",
             error_id: code,
           });
