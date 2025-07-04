@@ -329,6 +329,25 @@ export const swaggerConfig: ElysiaSwaggerConfig = {
             },
           },
         },
+        Unauthenticated: {
+          title: "UnauthenticatedError",
+          type: "object",
+          description:
+            "Thrown if trying to access a protected endpoint without a token.",
+          required: ["error", "code"],
+          properties: {
+            error: {
+              type: "string",
+              description: "Error Message.",
+              enum: ["Not Logged In"],
+            },
+            code: {
+              type: "string",
+              description: "Error specific code.",
+              enum: ["Unauthenticated"],
+            },
+          },
+        },
         InvalidToken: {
           title: "InvalidTokenError",
           type: "object",

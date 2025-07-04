@@ -89,6 +89,28 @@ const app = new Elysia({ prefix: "/api" })
       },
       detail: {
         security: [{ bearerAuth: [] }],
+        responses: {
+          401: {
+            description: "Unauthenticated.",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Unauthenticated",
+                },
+              },
+            },
+          },
+          403: {
+            description: "Invalid Token.",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/InvalidToken",
+                },
+              },
+            },
+          },
+        },
       },
     },
     (app) => app.use(protectedAuthRouter).use(receiptRouter).use(googleRouter),
