@@ -10,7 +10,7 @@ export const postLoginDetail: DocumentDecoration = {
       content: {
         "application/json": {
           schema: {
-            $ref: "#/components/schemas/token",
+            $ref: "#/components/schemas/authResponse",
           },
         },
       },
@@ -38,7 +38,7 @@ export const postSignupDetail: DocumentDecoration = {
       content: {
         "application/json": {
           schema: {
-            $ref: "#/components/schemas/token",
+            $ref: "#/components/schemas/authResponse",
           },
         },
       },
@@ -97,9 +97,7 @@ export const getMeDetail: DocumentDecoration = {
             required: ["id", "username", "email", "displayName"],
             properties: {
               id: {
-                type: "string",
-                description: "User's ID.",
-                example: "lUYV40MMZ1pHFmBnyWk63UYfplGDCpBp",
+                $ref: "#/components/schemas/userId",
               },
               username: {
                 type: "string",
@@ -114,9 +112,7 @@ export const getMeDetail: DocumentDecoration = {
                 example: "definitelynotabot@trustme.com",
               },
               displayName: {
-                type: "string",
-                description: "User's display name. (for displaying in UIs)",
-                example: "Not A Robot",
+                $ref: "#/components/schemas/displayName",
               },
             },
           },

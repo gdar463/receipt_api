@@ -24,5 +24,9 @@ export async function signup(body: SignupBody, status: StatusFunc) {
   }
   const id = ids[0].id;
   const jwt = await createSession(id);
-  return status(200, { token: jwt });
+  return status(200, {
+    id,
+    displayName: body.displayName,
+    token: jwt,
+  });
 }

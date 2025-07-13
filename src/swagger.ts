@@ -118,6 +118,21 @@ export const swaggerConfig: ElysiaSwaggerConfig = {
           description: "Receipt's name.",
           example: "Generic Receipt",
         },
+        userId: {
+          type: "string",
+          description: "User's ID.",
+          example: "lUYV40MMZ1pHFmBnyWk63UYfplGDCpBp",
+        },
+        displayName: {
+          type: "string",
+          description: "User's display name. (for displaying in UIs)",
+          example: "Not A Robot",
+        },
+        singleToken: {
+          type: "string",
+          description: "Bearer token, to be saved and used with every request.",
+          example: "YOUR_SECRET_TOKEN",
+        },
         token: {
           title: "Token",
           type: "object",
@@ -126,10 +141,22 @@ export const swaggerConfig: ElysiaSwaggerConfig = {
           required: ["token"],
           properties: {
             token: {
-              type: "string",
-              description:
-                "Bearer token, to be saved and used with every request.",
-              example: "YOUR_SECRET_TOKEN",
+              $ref: "#/components/schemas/singleToken",
+            },
+          },
+        },
+        authResponse: {
+          type: "object",
+          required: ["id", "displayName", "token"],
+          properties: {
+            id: {
+              $ref: "#/components/schemas/userId",
+            },
+            displayName: {
+              $ref: "#/components/schemas/displayName",
+            },
+            token: {
+              $ref: "#/components/schemas/singleToken",
             },
           },
         },

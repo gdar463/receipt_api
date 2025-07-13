@@ -12,7 +12,11 @@ export async function login(
   status: StatusFunc,
 ) {
   const user = await db
-    .select({ hash: users.password, id: users.id })
+    .select({
+      hash: users.password,
+      id: users.id,
+      displayName: users.displayName,
+    })
     .from(users)
     .where(eq(users.username, body.username));
   if (user.length == 0) {
@@ -23,5 +27,9 @@ export async function login(
     throw new InvalidCredsError();
   }
   const jwt = await createSession(user[0].id);
-  return status(200, { token: jwt });
+  return status(200, {
+    id: user[0].id,
+    displayName: user[0].displayName,
+    token: jwt,
+  });
 }
