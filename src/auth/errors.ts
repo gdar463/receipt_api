@@ -18,10 +18,3 @@ export class UserAlreadyExistsError extends Error {
     super.name = "UserAlreadyExistsError";
   }
 }
-
-export class UserDoesntExistError extends Error {
-  constructor() {
-    super("Requested user doesn't exist, somehow");
-    super.name = "UserDoesntExistError";
-  }
-}

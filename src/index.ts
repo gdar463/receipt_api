@@ -4,7 +4,7 @@ import { swagger } from "@elysiajs/swagger";
 import "dotenv/config";
 import Elysia from "elysia";
 
-import { authRouter, protectedAuthRouter } from "@/auth";
+import { authRouter } from "@/auth";
 import { receiptRouter } from "@/receipt";
 
 import { authenticate } from "./auth/jwt";
@@ -113,7 +113,7 @@ const app = new Elysia({ prefix: "/api" })
         },
       },
     },
-    (app) => app.use(protectedAuthRouter).use(receiptRouter).use(googleRouter),
+    (app) => app.use(receiptRouter).use(googleRouter),
   );
 // end protected section
 

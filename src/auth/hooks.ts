@@ -1,6 +1,5 @@
 import bearer from "@elysiajs/bearer";
 import { Elysia } from "elysia";
-import { decodeJwt } from "jose";
 
 import { requestLogger } from "@/request";
 import { promoteHooks } from "@/util";
@@ -9,7 +8,6 @@ import {
   InvalidCredsError,
   InvalidTokenError,
   UserAlreadyExistsError,
-  UserDoesntExistError,
 } from "./errors";
 
 const authHooks = new Elysia({ name: "authHooks" })
@@ -97,73 +95,4 @@ const authHooks = new Elysia({ name: "authHooks" })
     },
   );
 promoteHooks(authHooks.event);
-
-const protectedAuthHooks = new Elysia({ name: "protectedAuthHooks" })
-  .use(bearer())
-  .use(requestLogger("protectedAuth"))
-  .error({ UserDoesntExistError })
-  .resolve({ as: "scoped" }, ({ bearer }) => {
-    return { userId: decodeJwt(bearer!).id as string };
-  })
-  .onError(
-    { as: "scoped" },
-    ({
-      logger,
-      code,
-      error,
-      set,
-      request_id,
-      request: { method },
-      route,
-      request_time,
-    }) => {
-      const commonLog = {
-        path: route,
-        method,
-        request_id: request_id || null,
-        timing:
-          request_time != undefined ? performance.now() - request_time : null,
-        ip:
-          set.headers["x-forwarded-for"] ||
-          set.headers["x-real-ip"] ||
-          set.headers["x-client-ip"] ||
-          null,
-      };
-
-      switch (code) {
-        case "VALIDATION":
-          logger.warn("errored_request", {
-            ...commonLog,
-            status: 400,
-            router: "protectedAuth",
-            error_id: "VALIDATION",
-          });
-          set.status = 400;
-          return { error: "Invalid request", code: "ValidationFailed" };
-        case "UserDoesntExistError":
-          logger.warn("errored_request", {
-            ...commonLog,
-            status: 401,
-            router: "protectedAuth",
-            error_id: "InvalidTokenError",
-          });
-          set.status = 401;
-          return {
-            error:
-              "User doesn't exist. If it's not been deleted, contact support.",
-            code: "UserDoesntExist",
-          };
-        default:
-          logger.error("errored_request", {
-            ...commonLog,
-            status: set.status,
-            router: "protectedAuth",
-            error_id: code,
-          });
-          return { error: error, code };
-      }
-    },
-  );
-promoteHooks(protectedAuthHooks.event);
-
-export { authHooks, protectedAuthHooks };
+export { authHooks };

@@ -82,38 +82,3 @@ export const postRefreshDetail: DocumentDecoration = {
     },
   },
 };
-
-export const getMeDetail: DocumentDecoration = {
-  summary: "Get User",
-  description: "Gets information of the current user.",
-  responses: {
-    200: {
-      description: "OK.",
-      content: {
-        "application/json": {
-          schema: {
-            title: "User",
-            type: "object",
-            required: ["id", "username", "email", "displayName"],
-            properties: {
-              id: {
-                $ref: "#/components/schemas/userId",
-              },
-              username: {
-                type: "string",
-                description: "User's username.",
-                example: "beepBoopImHuman",
-              },
-              email: {
-                $ref: "#/components/schemas/email",
-              },
-              displayName: {
-                $ref: "#/components/schemas/displayName",
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-};

@@ -1,16 +1,10 @@
 import Elysia, { t } from "elysia";
 
-import {
-  getMeDetail,
-  postLoginDetail,
-  postRefreshDetail,
-  postSignupDetail,
-} from "./docs";
+import { postLoginDetail, postRefreshDetail, postSignupDetail } from "./docs";
 import { InvalidTokenError } from "./errors";
-import { authHooks, protectedAuthHooks } from "./hooks";
+import { authHooks } from "./hooks";
 import { authenticate, createSession } from "./jwt";
 import { login } from "./routes/login";
-import { me } from "./routes/me";
 import { signup } from "./routes/signup";
 import { signupBodyValidation } from "./types";
 
@@ -61,11 +55,3 @@ export const authRouter = new Elysia({
           },
         ),
   );
-
-export const protectedAuthRouter = new Elysia({
-  tags: ["Auth"],
-})
-  .use(protectedAuthHooks)
-  .get("/me", async ({ userId }) => await me(userId), {
-    detail: getMeDetail,
-  });
