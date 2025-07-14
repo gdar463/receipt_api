@@ -15,8 +15,10 @@ export async function login(
     .select({
       hash: users.password,
       id: users.id,
+      username: users.username,
       displayName: users.displayName,
       email: users.email,
+      createdAt: users.createdAt,
     })
     .from(users)
     .where(eq(users.username, body.username));
@@ -30,8 +32,10 @@ export async function login(
   const jwt = await createSession(user[0].id);
   return status(200, {
     id: user[0].id,
+    username: user[0].username,
     displayName: user[0].displayName,
     email: user[0].email,
+    createdAt: user[0].createdAt,
     token: jwt,
   });
 }

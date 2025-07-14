@@ -18,7 +18,10 @@ export async function signup(body: SignupBody, status: StatusFunc) {
     })
     .onConflictDoNothing({ target: users.username })
     .onConflictDoNothing({ target: users.email })
-    .returning({ id: users.id });
+    .returning({
+      id: users.id,
+      createdAt: users.createdAt,
+    });
   if (ids.length == 0) {
     throw new UserAlreadyExistsError();
   }
@@ -26,8 +29,10 @@ export async function signup(body: SignupBody, status: StatusFunc) {
   const jwt = await createSession(id);
   return status(200, {
     id,
+    username: body.username,
     displayName: body.displayName,
     email: body.email,
+    createdAt: ids[0].createdAt,
     token: jwt,
   });
 }

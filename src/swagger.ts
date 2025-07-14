@@ -100,7 +100,7 @@ export const swaggerConfig: ElysiaSwaggerConfig = {
         },
         createdAt: {
           type: "integer",
-          description: "Receipt's creation time, from Unix Epoch.",
+          description: "Creation time, from Unix Epoch.",
           example: 946684800,
         },
         updatedAt: {
@@ -134,6 +134,11 @@ export const swaggerConfig: ElysiaSwaggerConfig = {
           description: "User's email. (used in the future for password resets)",
           example: "definitelynotabot@trustme.com",
         },
+        username: {
+          type: "string",
+          description: "User's username.",
+          example: "beepBoopImHuman",
+        },
         singleToken: {
           type: "string",
           description: "Bearer token, to be saved and used with every request.",
@@ -153,16 +158,29 @@ export const swaggerConfig: ElysiaSwaggerConfig = {
         },
         authResponse: {
           type: "object",
-          required: ["id", "displayName", "token"],
+          required: [
+            "id",
+            "username",
+            "displayName",
+            "email",
+            "createdAt",
+            "token",
+          ],
           properties: {
             id: {
               $ref: "#/components/schemas/userId",
+            },
+            username: {
+              $ref: "#/components/schemas/username",
             },
             displayName: {
               $ref: "#/components/schemas/displayName",
             },
             email: {
               $ref: "#/components/schemas/email",
+            },
+            createdAt: {
+              $ref: "#/components/schemas/createdAt",
             },
             token: {
               $ref: "#/components/schemas/singleToken",
