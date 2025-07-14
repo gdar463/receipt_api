@@ -16,6 +16,7 @@ export async function login(
       hash: users.password,
       id: users.id,
       displayName: users.displayName,
+      email: users.email,
     })
     .from(users)
     .where(eq(users.username, body.username));
@@ -30,6 +31,7 @@ export async function login(
   return status(200, {
     id: user[0].id,
     displayName: user[0].displayName,
+    email: user[0].email,
     token: jwt,
   });
 }

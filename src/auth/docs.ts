@@ -105,11 +105,7 @@ export const getMeDetail: DocumentDecoration = {
                 example: "beepBoopImHuman",
               },
               email: {
-                type: "string",
-                format: "email",
-                description:
-                  "User's email. (used in the future for password resets)",
-                example: "definitelynotabot@trustme.com",
+                $ref: "#/components/schemas/email",
               },
               displayName: {
                 $ref: "#/components/schemas/displayName",

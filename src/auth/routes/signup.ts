@@ -27,6 +27,7 @@ export async function signup(body: SignupBody, status: StatusFunc) {
   return status(200, {
     id,
     displayName: body.displayName,
+    email: body.email,
     token: jwt,
   });
 }

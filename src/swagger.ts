@@ -128,6 +128,12 @@ export const swaggerConfig: ElysiaSwaggerConfig = {
           description: "User's display name. (for displaying in UIs)",
           example: "Not A Robot",
         },
+        email: {
+          type: "string",
+          format: "email",
+          description: "User's email. (used in the future for password resets)",
+          example: "definitelynotabot@trustme.com",
+        },
         singleToken: {
           type: "string",
           description: "Bearer token, to be saved and used with every request.",
@@ -154,6 +160,9 @@ export const swaggerConfig: ElysiaSwaggerConfig = {
             },
             displayName: {
               $ref: "#/components/schemas/displayName",
+            },
+            email: {
+              $ref: "#/components/schemas/email",
             },
             token: {
               $ref: "#/components/schemas/singleToken",
