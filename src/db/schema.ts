@@ -1,6 +1,6 @@
 import { customTimestamp } from ".";
-import { relations, sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { relations } from "drizzle-orm";
+import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
 
 import type { ReceiptComponent } from "@/receipt/components/types";
@@ -14,9 +14,7 @@ export const users = sqliteTable("users", {
   displayName: text("display").notNull(),
   email: text("email").notNull().unique(),
   googleInfo: text("google_info"),
-  createdAt: integer({ mode: "timestamp" })
-    .default(sql`(CURRENT_TIMESTAMP)`)
-    .notNull(),
+  createdAt: customTimestamp("created_at").default(new Date(0)).notNull(),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({

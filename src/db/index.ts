@@ -13,12 +13,15 @@ const db = drizzle({
   },
 });
 
-export const customTimestamp = customType<{ data: Date; driverData: number }>({
+export const customTimestamp = customType<{ data: Date; driverData: string }>({
   dataType() {
-    return "integer";
+    return "text";
+  },
+  fromDriver(value: string) {
+    return new Date(value);
   },
   toDriver(value: Date) {
-    return value.getTime();
+    return value.toString();
   },
 });
 
