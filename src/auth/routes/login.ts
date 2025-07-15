@@ -35,7 +35,7 @@ export async function login(
     username: user[0].username,
     displayName: user[0].displayName,
     email: user[0].email,
-    createdAt: user[0].createdAt,
+    createdAt: user[0].createdAt.getTime(),
     token: jwt,
   });
 }

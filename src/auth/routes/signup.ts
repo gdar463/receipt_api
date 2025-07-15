@@ -32,7 +32,7 @@ export async function signup(body: SignupBody, status: StatusFunc) {
     username: body.username,
     displayName: body.displayName,
     email: body.email,
-    createdAt: ids[0].createdAt,
+    createdAt: ids[0].createdAt.getTime(),
     token: jwt,
   });
 }
