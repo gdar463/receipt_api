@@ -8,7 +8,7 @@ import { authRouter } from "@/auth";
 import { receiptRouter } from "@/receipt";
 
 import { authenticate } from "./auth/jwt";
-import { googleRouter } from "./google";
+import { globalGoogleRouter, googleRouter } from "./google";
 import { logger } from "./logger";
 import { swaggerConfig } from "./swagger";
 import { test } from "./test";
@@ -37,6 +37,7 @@ const app = new Elysia({ prefix: "/api" })
   })
   .get("/test", async () => await test())
   .use(authRouter)
+  .use(globalGoogleRouter)
   // protected section
   .guard(
     {

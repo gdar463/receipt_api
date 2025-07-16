@@ -8,7 +8,7 @@ import { users } from "@/db/schema";
 import { GoogleError } from "@/receipt/components/errors";
 
 import { getAuthUrlDetail, getCallbackDetail } from "./docs";
-import { googleHooks } from "./hooks";
+import { globalGoogleHooks, googleHooks } from "./hooks";
 import { encryptInfo } from "./token";
 
 const authClient = new google.auth.OAuth2(
@@ -41,7 +41,13 @@ export const googleRouter = new Elysia({
     {
       detail: getAuthUrlDetail,
     },
-  )
+  );
+
+export const globalGoogleRouter = new Elysia({
+  prefix: "/google",
+  tags: ["Google"],
+})
+  .use(globalGoogleHooks)
   .get(
     "/callback",
     async ({ query, status }) => {

@@ -79,4 +79,68 @@ const googleHooks = new Elysia({ name: "googleHooks" })
     },
   );
 promoteHooks(googleHooks.event);
-export { googleHooks };
+
+const globalGoogleHooks = new Elysia({ name: "globalGoogleHooks" })
+  .use(bearer())
+  .error({
+    GoogleError,
+  })
+  .use(requestLogger("google"))
+  .onError(
+    { as: "scoped" },
+    ({
+      logger,
+      code,
+      error,
+      set,
+      request_id,
+      request: { method },
+      route,
+      request_time,
+    }) => {
+      const commonLog = {
+        path: route,
+        method,
+        request_id: request_id || null,
+        timing:
+          request_time != undefined ? performance.now() - request_time : null,
+        ip:
+          set.headers["x-forwarded-for"] ||
+          set.headers["x-real-ip"] ||
+          set.headers["x-client-ip"] ||
+          null,
+      };
+
+      switch (code) {
+        case "VALIDATION":
+          logger.error("errored_request", {
+            ...commonLog,
+            status: 400,
+            router: "google",
+            error_id: "VALIDATION",
+          });
+          set.status = 400;
+          return { error: "Invalid request", code: "ValidationFailed" };
+        case "GoogleError":
+          logger.error("errored_request", {
+            ...commonLog,
+            status: 500,
+            router: "google",
+            error_id: "GoogleError",
+          });
+          set.status = 500;
+          return { error: "Google Failed", code: "GoogleError" };
+        default:
+          logger.error("errored_request", {
+            ...commonLog,
+            status: set.status,
+            router: "google",
+            error_id: code,
+          });
+          return { error: error, code };
+      }
+    },
+  );
+promoteHooks(globalGoogleHooks.event);
+
+export { googleHooks, globalGoogleHooks };
