@@ -1,3 +1,5 @@
+import path from "path";
+
 import bearer from "@elysiajs/bearer";
 import { eq } from "drizzle-orm";
 import Elysia, { t } from "elysia";
@@ -50,7 +52,7 @@ export const globalGoogleRouter = new Elysia({
   .use(globalGoogleHooks)
   .get(
     "/callback",
-    async ({ query, status }) => {
+    async ({ query }) => {
       const { tokens } = await authClient.getToken(query.code);
       if (!tokens.access_token) {
         throw new GoogleError();
@@ -65,7 +67,11 @@ export const globalGoogleRouter = new Elysia({
           }),
         })
         .where(eq(users.id, query.state));
-      return status(204);
+      return new Response(Bun.file(path.join(__dirname, "callback.html")), {
+        headers: {
+          "Content-Type": "text/html",
+        },
+      });
     },
     {
       query: t.Object({
