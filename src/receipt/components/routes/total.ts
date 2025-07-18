@@ -1,3 +1,4 @@
+import bearer from "@elysiajs/bearer";
 import { eq } from "drizzle-orm";
 import Elysia, { t } from "elysia";
 import { decodeJwt } from "jose";
@@ -14,8 +15,9 @@ import { totalComponent } from "../validation";
 const currencies = Intl.supportedValuesOf("currency");
 
 export const totalRouter = new Elysia()
-  .resolve(({ cookie: { session } }) => {
-    return { userId: decodeJwt(session.value!).id as string };
+  .use(bearer())
+  .resolve(({ bearer }) => {
+    return { userId: decodeJwt(bearer).id as string };
   })
   .put(
     "/total",

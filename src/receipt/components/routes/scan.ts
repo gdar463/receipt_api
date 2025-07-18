@@ -1,3 +1,4 @@
+import bearer from "@elysiajs/bearer";
 import { eq } from "drizzle-orm";
 import Elysia, { t } from "elysia";
 import { decodeJwt } from "jose";
@@ -17,8 +18,9 @@ import { ComponentNotFoundError, GoogleError } from "../errors";
 import { getComps } from "../utils";
 
 export const scanRouter = new Elysia()
-  .resolve(({ cookie: { session } }) => {
-    return { userId: decodeJwt(session.value!).id as string };
+  .use(bearer())
+  .resolve(({ bearer }) => {
+    return { userId: decodeJwt(bearer).id as string };
   })
   .get(
     "/scan",

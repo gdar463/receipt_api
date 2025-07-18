@@ -1,3 +1,4 @@
+import bearer from "@elysiajs/bearer";
 import { eq } from "drizzle-orm";
 import Elysia, { t } from "elysia";
 import { decodeJwt } from "jose";
@@ -15,8 +16,9 @@ import { getComps } from "../utils";
 import { datetimeComponent } from "../validation";
 
 export const datetimeRouter = new Elysia()
-  .resolve(({ cookie: { session } }) => {
-    return { userId: decodeJwt(session.value!).id as string };
+  .use(bearer())
+  .resolve(({ bearer }) => {
+    return { userId: decodeJwt(bearer).id as string };
   })
   .put(
     "/datetime",
