@@ -5,7 +5,7 @@ import { decodeJwt } from "jose";
 import { requestLogger } from "@/request";
 import { promoteHooks } from "@/util";
 
-import { JWENotFoundError } from "../errors";
+import { JWENotFoundError, ReceiptNotFoundError } from "../errors";
 
 import {
   ComponentNotFoundError,
@@ -22,6 +22,7 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
     CurrencyNotFoundError,
     GoogleError,
     JWENotFoundError,
+    ReceiptNotFoundError,
   })
   .use(requestLogger("components"))
   .resolve({ as: "scoped" }, ({ bearer }) => {
@@ -70,6 +71,15 @@ const componentsHooks = new Elysia({ name: "componentsHooks" })
           if (process.env.NODE_ENV === "development") return error.message;
           set.status = 400;
           return { error: "Invalid request", code: "ValidationFailed" };
+        case "ReceiptNotFoundError":
+          logger.error("errored_request", {
+            ...commonLog,
+            status: 404,
+            router: "receipt",
+            error_id: "ReceiptNotFoundError",
+          });
+          set.status = 404;
+          return { error: "Receipt Not Found", code: "ReceiptNotFound" };
         case "ComponentNotFoundError":
           logger.error("errored_request", {
             ...commonLog,
