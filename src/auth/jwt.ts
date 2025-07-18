@@ -25,10 +25,10 @@ export async function authenticate(jwt: string) {
   } catch (e) {
     if (
       e instanceof JWSSignatureVerificationFailed ||
-      JWTInvalid ||
-      JWSInvalid ||
-      JWTClaimValidationFailed ||
-      JWTExpired
+      e instanceof JWTInvalid ||
+      e instanceof JWSInvalid ||
+      e instanceof JWTClaimValidationFailed ||
+      e instanceof JWTExpired
     ) {
       return false;
     }
